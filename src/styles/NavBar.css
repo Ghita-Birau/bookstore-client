@@ -1,0 +1,35 @@
+.navbar {
+    background-color: navajowhite !important;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand {
+    margin-right: 10px;
+}
+.logo-test{
+    width: 25px;
+    height: auto;
+    margin-right: 30px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link svg {
+    margin-right: 5px;
+}
+
+.search-form {
+    flex-grow: 1;
+    max-width: 800px;
+}
+
+.search-input {
+    width: 100%;
+}

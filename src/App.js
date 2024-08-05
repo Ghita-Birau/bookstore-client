@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NavBar from "./components/NavBar";
+import SideBar from './components/SideBar';
+import BookGrid from './components/BookGrid';
+import Footer from './components/Footer';
+import BookDetails from './components/BookDetails';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    return (
+        <Router>
+            <div className="App">
+                <NavBar />
+                <div className="d-flex">
+                    <SideBar  />
+                    <div className="content flex-grow-1">
+                        <Routes>
+                            <Route path="/" element={<BookGrid />} />
+                            <Route path="/book/:title" element={<BookDetails />} />
+                        </Routes>
+                    </div>
+                </div>
+                <Footer />
+            </div>
+        </Router>
+    );
 }
 
 export default App;

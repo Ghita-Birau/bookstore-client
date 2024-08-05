@@ -1,0 +1,47 @@
+.side-menu {
+    width: 200px;
+    height: calc(100vh - 120px);
+    position: fixed;
+    top: 60px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-section h3 {
+    margin-bottom: 10px;
+}
+
+.menu-section ul {
+    padding-left: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.menu-section li {
+    margin-bottom: 10px;
+}
+
+.menu-section a {
+    color: #333;
+}
+
+.menu-section a:hover {
+    color: #007bff;
+}
+
+.price-range-filter .form-range {
+    width: 100%;
+}
+
+.publication-date-filter .form-control {
+    width: 100%;
+}
