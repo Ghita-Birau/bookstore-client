@@ -1,23 +1,36 @@
 import React from 'react';
 
-function PriceRangeFilter({ id, label, min, max, step, value, onChange }) {
+function PriceRangeFilter({ min, max, step, minPrice, maxPrice, onMinPriceChange, onMaxPriceChange }) {
     return (
         <div className="price-range-filter mb-4">
-            <label htmlFor={id} className="form-label">{label}</label>
-            <input
-                type="range"
-                className="form-range"
-                id={id}
-                min={min}
-                max={max}
-                step={step}
-                value={value}
-                onChange={onChange}
-            />
+            <label className="form-label">Price Range</label>
             <div className="d-flex justify-content-between">
                 <span>{min}</span>
-                <span>{value}</span>
                 <span>{max}</span>
+            </div>
+            <div className="d-flex justify-content-between">
+                <input
+                    type="range"
+                    className="form-range"
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={minPrice}
+                    onChange={onMinPriceChange}
+                />
+                <input
+                    type="range"
+                    className="form-range"
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={maxPrice}
+                    onChange={onMaxPriceChange}
+                />
+            </div>
+            <div className="d-flex justify-content-between">
+                <span>{minPrice}</span>
+                <span>{maxPrice}</span>
             </div>
         </div>
     );

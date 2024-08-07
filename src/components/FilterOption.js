@@ -1,10 +1,15 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-function FilterOption({ id, label, onChange }) {
+function FilterOption({ id, label, checked, onChange }) {
     return (
         <div className="form-check">
-            <input className="form-check-input me-2" type="checkbox" id={id} onChange={onChange}/>
+            <input
+                className="form-check-input"
+                type="checkbox"
+                id={id}
+                checked={checked}
+                onChange={onChange}
+            />
             <label className="form-check-label" htmlFor={id}>
                 {label}
             </label>

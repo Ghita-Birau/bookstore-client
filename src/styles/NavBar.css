@@ -33,3 +33,8 @@
 .search-input {
     width: 100%;
 }
+
+.form-select {
+    width: auto;
+    margin-right: 0.5rem;
+}

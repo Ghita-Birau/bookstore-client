@@ -21,6 +21,13 @@ function Navbar() {
                         <input className="form-control me-2 search-input" type="search" placeholder="Search books..."
                                aria-label="Search"/>
                         <button className="btn btn-outline-success" type="submit">Search</button>
+                        <select className="form-select me-3 ms-3" aria-label="Sort books">
+                            <option value="default">Order by</option>
+                            <option value="price">Price</option>
+                            <option value="category">Category</option>
+                            <option value="author">Author</option>
+                            <option value="publication-date">Publication Date</option>
+                        </select>
                     </form>
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
