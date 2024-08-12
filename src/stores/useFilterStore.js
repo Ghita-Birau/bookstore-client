@@ -107,7 +107,7 @@ const useFilterStore = create((set, get) => ({
                     }
                 }
             });
-            //console.log("Filter options populated:", options);
+            console.log("Filter options populated:", options);
             set({ filterOptions: options });
         } catch (error) {
             console.error('Error fetching filters:', error);

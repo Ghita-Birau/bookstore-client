@@ -22,7 +22,6 @@ function PriceSliderFilter({ min, max, step }) {
 
     return (
         <div className="price-range-filter mb-4">
-            <label className="form-label">Price Range</label>
             <Slider
                 value={value}
                 onChange={handleChange}
@@ -31,6 +30,7 @@ function PriceSliderFilter({ min, max, step }) {
                 min={min}
                 max={max}
                 step={step}
+                disableSwap //Previne suprapunerea cursoarelor
             />
             <div className="d-flex justify-content-between">
                 <span>{value[0]}</span>

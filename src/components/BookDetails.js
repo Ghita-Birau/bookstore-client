@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { fetchBook } from '../apiRoutes';
 import { useNavigate} from "react-router-dom";
 
+const bookCache = new Map();
 function BookDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -11,8 +12,13 @@ function BookDetails() {
 
     useEffect(() => {
         const loadBook = async () => {
+            if(bookCache.has(id)) {
+                setBook(bookCache.get(id));
+                return;
+            }
             try {
                 const data = await fetchBook(id);
+                bookCache.set(id, data);
                 setBook(data);
             } catch (error) {
                 setError(error.message);

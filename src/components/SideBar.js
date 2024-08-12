@@ -5,8 +5,7 @@ import PublicationDateRangeFilter from "./PublicationDateRangeFilter";
 import useFilterStore from '../stores/useFilterStore';
 import FilterCount from "./FiltersCount";
 import FilterList from "./FilterList";
-import PriceSliderFilter from "./PriceRangeFilter";
-import PriceRangeFilter from "./PriceRangeFilter";
+import PriceSliderFilter from "./PriceSliderFilter";
 
 function SideBar() {
     const { filters, filterOptions, loadFilterOptions, clearFilters} = useFilterStore();
@@ -25,17 +24,9 @@ function SideBar() {
                 return (
                     <div className="menu-section mb-4 flex-grow-1 d-flex flex-column">
                         <h3 className="h5">{filter.label}</h3>
-                        {/*<PriceRangeFilter*/}
-                        {/*    id="price-range"*/}
-                        {/*    min={parseFloat(filterOptions.minPrice)}*/}
-                        {/*    max={parseFloat(filterOptions.maxPrice)}*/}
-                        {/*    step={1}*/}
-                        {/*    minPrice={filter.minPrice}*/}
-                        {/*    maxPrice={filter.maxPrice}*/}
-                        {/*/>*/}
                         <PriceSliderFilter
-                            min={filterOptions.minPrice}
-                            max={filterOptions.maxPrice}
+                            min={parseFloat(filter.value.minPrice)}
+                            max={parseFloat(filter.value.maxPrice)}
                             step={1}
                         />
                     </div>
@@ -66,9 +57,6 @@ function SideBar() {
 
     return (
         <aside className="side-menu bg-light border-end p-3 d-flex flex-column">
-            {/*{filterOptions.filters && filterOptions.filters.map(filter => (*/}
-            {/*    renderFilterComponent(filter)*/}
-            {/*))}*/}
 
             {filterOptions.filters && filterOptions.filters.map((filter, index) => (
                 <React.Fragment key={filter.key || index}>
