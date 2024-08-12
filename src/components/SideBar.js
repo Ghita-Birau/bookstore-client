@@ -19,6 +19,7 @@ function SideBar() {
     //console.log("Filter options:", filterOptions.filters);
 
     const renderFilterComponent = (filter) => {
+
         switch (filter.key) {
             case 'price':
                 return (
@@ -57,7 +58,7 @@ function SideBar() {
                         keyName={filter.key}
                         label={filter.label}
                         options={filter.value}
-                        selectedOptions={filter[filter.key]}
+                        selectedOptions={filters[filter.key] || []}
                     />
                 );
         }
