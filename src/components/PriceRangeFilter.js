@@ -1,6 +1,18 @@
 import React from 'react';
+import useFilterStore from "../stores/useFilterStore";
 
 function PriceRangeFilter({ min, max, step, minPrice, maxPrice, onMinPriceChange, onMaxPriceChange }) {
+
+    const { setFilter } = useFilterStore();
+
+    const handleMinPriceChange = (event) => {
+        setFilter('minPrice', Number(event.target.value));
+    };
+
+    const handleMaxPriceChange = (event) => {
+        setFilter('maxPrice', Number(event.target.value));
+    };
+
     return (
         <div className="price-range-filter mb-4">
             <label className="form-label">Price Range</label>
@@ -16,7 +28,7 @@ function PriceRangeFilter({ min, max, step, minPrice, maxPrice, onMinPriceChange
                     max={max}
                     step={step}
                     value={minPrice}
-                    onChange={onMinPriceChange}
+                    onChange={handleMinPriceChange}
                 />
                 <input
                     type="range"
@@ -25,7 +37,7 @@ function PriceRangeFilter({ min, max, step, minPrice, maxPrice, onMinPriceChange
                     max={max}
                     step={step}
                     value={maxPrice}
-                    onChange={onMaxPriceChange}
+                    onChange={handleMaxPriceChange}
                 />
             </div>
             <div className="d-flex justify-content-between">

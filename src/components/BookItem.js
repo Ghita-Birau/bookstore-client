@@ -4,7 +4,7 @@ import defaultImage from "../assets/default-book-cover.jpg";
 import { Link } from 'react-router-dom';
 
 function BookItem({ book }) {
-    const { title, author, publishing_house, gen, price, publication_date, image_url, description } = book;
+    const { id, title, author, publishing_house, gen, price, publication_date, image_url, description } = book;
 
     if (!title || !price) {
         return null;
@@ -23,6 +23,7 @@ function BookItem({ book }) {
     }
 
     const validatedBook = {
+        id,
         title,
         author: author || 'Unknown',
         publishing_house: publishing_house || 'Unknown',
@@ -41,7 +42,7 @@ function BookItem({ book }) {
         <div className="card mb-3 h-100">
             <div className="row g-0 h-100">
                 <div className="col-md-4">
-                    <Link to={`/book/${validatedBook.title}`} state={{ book: validatedBook }}>
+                    <Link to={`/book/${validatedBook.id}`} state={{ book: validatedBook }}>
                         <img src={validatedBook.image_url} alt="Book Cover" className="img-fluid rounded-start h-100"/>
                     </Link>
                 </div>

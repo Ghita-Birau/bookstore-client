@@ -8,7 +8,13 @@ function FilterCount() {
         if (Array.isArray(value)) {
             return count + value.length;
         }
-        return value !== '' ? count + 1 : count;
+        if (typeof value === 'number') {
+            return value !== 0 ? count + 1 : count;
+        }
+        if (value !== '' && value !== null) {
+            return count + 1;
+        }
+        return count;
     }, 0);
 
     return (

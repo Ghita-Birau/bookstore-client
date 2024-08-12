@@ -18,7 +18,7 @@ function App() {
                     <div className="content flex-grow-1">
                         <Routes>
                             <Route path="/" element={<BookGrid />} />
-                            <Route path="/book/:title" element={<BookDetails />} />
+                            <Route path="/book/:id" element={<BookDetails />} />
                         </Routes>
                     </div>
                 </div>

@@ -3,8 +3,22 @@ import {FaUser, FaShoppingCart, FaHeart} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/NavBar.css';
 import logo from '../assets/logo.jpg';
+import useFilterStore from "../stores/useFilterStore";
 
 function Navbar() {
+    const { sort, setSort } = useFilterStore();
+
+    const handleSortChange = (value) => {
+        console.log('Selected value:', value);
+        if (value && value !== 'default') {
+            const [field, sortOrder] = value.split('-');
+            console.log('Field:', field, 'Order:', sortOrder);
+            if (field) {
+                setSort(field, sortOrder);
+            }
+        }
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div className="container-fluid">
@@ -21,13 +35,19 @@ function Navbar() {
                         <input className="form-control me-2 search-input" type="search" placeholder="Search books..."
                                aria-label="Search"/>
                         <button className="btn btn-outline-success" type="submit">Search</button>
-                        <select className="form-select me-3 ms-3" aria-label="Sort books">
-                            <option value="default">Order by</option>
-                            <option value="price">Price</option>
-                            <option value="category">Category</option>
-                            <option value="author">Author</option>
-                            <option value="publication-date">Publication Date</option>
-                        </select>
+
+
+                        <div className="sort-select-container">
+                            <select className="form-select me-3 ms-3" aria-label="Sort books"
+                                    onChange={(e) => handleSortChange(e.target.value, sort.order)}>
+                                <option value="default">Order by</option>
+                                <option value="price-asc">Price Asc</option>
+                                <option value="price-desc">Price Desc</option>
+                                <option value="publication_date-asc">Publication Date Asc</option>
+                                <option value="publication_date-desc">Publication Date Desc</option>
+
+                            </select>
+                        </div>
                     </form>
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
