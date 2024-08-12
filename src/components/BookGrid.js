@@ -2,23 +2,17 @@ import React, { useEffect } from 'react';
 import '../styles/BookGrid.css';
 import BookItem from "./BookItem";
 import useFilterStore from '../stores/useFilterStore';
-import Paginationa from "./Paginationa";
+import Pagination from "./Pagination";
 
 function BookGrid() {
 
-    const { filters, books, page, limit, total, setPage, loadBooks, sort} = useFilterStore();
+    const { filters, books, page, setPage, loadBooks, sort} = useFilterStore();
 
     useEffect(() => {
         loadBooks();
     }, [filters, page, sort]);
 
     const filterBooks = Array.isArray(books) ? books.filter(book => book.title && book.price) : [];
-
-    const handlePageChange = (newPage) => {
-        setPage(newPage);
-    };
-
-    const totalPages = Math.ceil(total / limit);
 
     return (
         <div className="container-fluid">
@@ -29,7 +23,10 @@ function BookGrid() {
                     </div>
                 ))}
             </div>
-            <Paginationa page={page} totalPages={totalPages} handlePageChange={handlePageChange} />
+            <Pagination
+                page={page}
+                onPageChange={setPage}
+            />
         </div>
     );
 }

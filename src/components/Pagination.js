@@ -1,6 +1,16 @@
 import React from 'react';
 import '../styles/Pagination.css';
-const Paginationa = ({ page, totalPages, handlePageChange }) => {
+import useFilterStore from "../stores/useFilterStore";
+const Pagination = ({ page, onPageChange }) => {
+
+    const { limit, total, } = useFilterStore();
+
+    const totalPages = Math.ceil(total / limit);
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            onPageChange(newPage);
+        }
+    };
 
     return (
         <div className="pagination">
@@ -11,4 +21,4 @@ const Paginationa = ({ page, totalPages, handlePageChange }) => {
     );
 };
 
-export default Paginationa;
+export default Pagination;
