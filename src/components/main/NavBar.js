@@ -1,9 +1,9 @@
 import React from 'react';
 import {FaUser, FaShoppingCart, FaHeart} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/NavBar.css';
-import logo from '../assets/logo.jpg';
-import useFilterStore from "../stores/useFilterStore";
+import '../../styles/NavBar.css';
+import logo from '../../assets/logo.jpg';
+import useFilterStore from "../../stores/useFilterStore";
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();

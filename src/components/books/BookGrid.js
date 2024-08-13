@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import '../styles/BookGrid.css';
+import '../../styles/BookGrid.css';
 import BookItem from "./BookItem";
-import useFilterStore from '../stores/useFilterStore';
-import Pagination from "./Pagination";
+import useFilterStore from '../../stores/useFilterStore';
+import Pagination from "../main/Pagination";
 
 function BookGrid() {
 

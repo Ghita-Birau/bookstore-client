@@ -1,5 +1,5 @@
 import React from 'react';
-import useFilterStore from '../stores/useFilterStore';
+import useFilterStore from '../../stores/useFilterStore';
 
 function FilterCount() {
     const { filters } = useFilterStore();

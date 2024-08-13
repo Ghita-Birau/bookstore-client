@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { fetchFilters, fetchBooks} from "../apiRoutes";
+import { fetchBooks, fetchFilters} from "../apiRoutes/booksRoutes";
 
 const useFilterStore = create((set, get) => ({
     filters: {

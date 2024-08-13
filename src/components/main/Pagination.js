@@ -1,6 +1,6 @@
 import React from 'react';
-import '../styles/Pagination.css';
-import useFilterStore from "../stores/useFilterStore";
+import '../../styles/Pagination.css';
+import useFilterStore from "../../stores/useFilterStore";
 const Pagination = ({ page, onPageChange }) => {
 
     const { limit, total, } = useFilterStore();

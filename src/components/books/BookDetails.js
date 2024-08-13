@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchBook } from '../apiRoutes';
+import { fetchBook } from '../../apiRoutes/booksRoutes';
 import { useNavigate} from "react-router-dom";
+import useOrderStore from '../../stores/useOrderStore';
 
 const bookCache = new Map();
 function BookDetails() {
@@ -9,6 +10,7 @@ function BookDetails() {
     const navigate = useNavigate();
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
+    const addToCart = useOrderStore((state) => state.addToCart)
 
     useEffect(() => {
         const loadBook = async () => {
@@ -26,6 +28,13 @@ function BookDetails() {
         };
         loadBook();
     }, [id]);
+
+    const handleAddToCart = () => {
+        if (book) {
+            addToCart(book);
+            alert('Book added to cart!');
+        }
+    };
 
     if (error) {
         return <div>Error: {error}</div>;
@@ -46,6 +55,7 @@ function BookDetails() {
             <p><strong>Price:</strong> {book.price}</p>
             <p><strong>Published:</strong> {new Date(book.publication_date).toLocaleDateString()}</p>
             <p>{book.description}</p>
+            <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
         </div>
     );
 }

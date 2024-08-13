@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/SideBar.css';
-import PublicationDateRangeFilter from "./PublicationDateRangeFilter";
-import useFilterStore from '../stores/useFilterStore';
-import FilterCount from "./FiltersCount";
-import FilterList from "./FilterList";
-import PriceSliderFilter from "./PriceSliderFilter";
+import '../../styles/SideBar.css';
+import PublicationDateRangeFilter from "../filters/PublicationDateRangeFilter";
+import useFilterStore from '../../stores/useFilterStore';
+import FilterCount from "../filters/FiltersCount";
+import FilterList from "../filters/FilterList";
+import PriceSliderFilter from "../filters/PriceSliderFilter";
 
 function SideBar() {
     const { filters, filterOptions, loadFilterOptions, clearFilters} = useFilterStore();

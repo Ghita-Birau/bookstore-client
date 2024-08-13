@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavBar from "./components/NavBar";
-import SideBar from './components/SideBar';
-import BookGrid from './components/BookGrid';
-import Footer from './components/Footer';
-import BookDetails from './components/BookDetails';
+import NavBar from "./components/main/NavBar";
+import SideBar from './components/main/SideBar';
+import BookGrid from './components/books/BookGrid';
+import Footer from './components/main/Footer';
+import BookDetails from './components/books/BookDetails';
+import OrderDetails from './components/orders/OrderDetails';
 import './App.css';
 
 function App() {
@@ -13,6 +14,10 @@ function App() {
         <Router>
             <div className="App">
                 <NavBar />
+                <Routes>
+                    <Route path="/" element={<OrderDetails />} />
+                    <Route path="/order/:bookId" element={<OrderDetails />} />
+                </Routes>
                 <div className="d-flex">
                     <SideBar  />
                     <div className="content flex-grow-1">

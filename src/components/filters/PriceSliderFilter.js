@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Slider } from '@mui/material';
-import useFilterStore from "../stores/useFilterStore";
+import useFilterStore from "../../stores/useFilterStore";
 
 function PriceSliderFilter({ min, max, step }) {
     const { filters, setFilter } = useFilterStore();

@@ -1,6 +1,6 @@
 import React from 'react';
-import '../styles/BookItem.css';
-import defaultImage from "../assets/default-book-cover.jpg";
+import '../../styles/BookItem.css';
+import defaultImage from "../../assets/default-book-cover.jpg";
 import { Link } from 'react-router-dom';
 
 function BookItem({ book }) {
