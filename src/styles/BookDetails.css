@@ -1,0 +1,13 @@
+.quantity-selector {
+    margin: 10px 0;
+}
+
+.quantity-selector label {
+    margin-right: 10px;
+}
+
+.quantity-selector input {
+    width: 50px;
+    padding: 2px;
+    text-align: center;
+}

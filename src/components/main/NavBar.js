@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {FaUser, FaShoppingCart, FaHeart} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
 import useFilterStore from "../../stores/useFilterStore";
+import useOrderStore from "../../stores/useOrderStore";
+import CartDetails from "../orders/CartDetails";
+
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();
@@ -17,6 +20,13 @@ function Navbar() {
                 setSort(field, sortOrder);
             }
         }
+    };
+
+    const { cart } = useOrderStore();
+    const [isCartVisible, setCartVisible] = useState(false);
+
+    const toggleCartVisibility = () => {
+        setCartVisible(!isCartVisible);
     };
 
     return (
@@ -61,13 +71,14 @@ function Navbar() {
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
+                            <a className="nav-link" href="#" onClick={toggleCartVisibility}>
                                 <FaShoppingCart/> Cart
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
+            {isCartVisible && <CartDetails />}
         </nav>
     );
 }

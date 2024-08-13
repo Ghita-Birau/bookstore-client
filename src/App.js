@@ -5,7 +5,7 @@ import SideBar from './components/main/SideBar';
 import BookGrid from './components/books/BookGrid';
 import Footer from './components/main/Footer';
 import BookDetails from './components/books/BookDetails';
-import OrderDetails from './components/orders/OrderDetails';
+import OrderDetails from './components/orders/CartDetails';
 import './App.css';
 
 function App() {
@@ -15,8 +15,7 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route path="/" element={<OrderDetails />} />
-                    <Route path="/order/:bookId" element={<OrderDetails />} />
+                    <Route path="/order/:orderId" element={<OrderDetails />} />
                 </Routes>
                 <div className="d-flex">
                     <SideBar  />

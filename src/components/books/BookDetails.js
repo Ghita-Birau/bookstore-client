@@ -10,6 +10,8 @@ function BookDetails() {
     const navigate = useNavigate();
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     const addToCart = useOrderStore((state) => state.addToCart)
 
     useEffect(() => {
@@ -30,10 +32,11 @@ function BookDetails() {
     }, [id]);
 
     const handleAddToCart = () => {
-        if (book) {
-            addToCart(book);
-            alert('Book added to cart!');
-        }
+        addToCart({ ...book, quantity });
+        setShowAlert(true)
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 2000);
     };
 
     if (error) {
@@ -46,6 +49,11 @@ function BookDetails() {
 
     return (
         <div className="container">
+            {showAlert && (
+                <div className="alert alert-success mt-3">
+                    Book added to cart!
+                </div>
+            )}
             <button className="btn btn-secondary mb-3" onClick={() => navigate(-1)}>Back</button>
             <h1>{book.title}</h1>
             <img src={book.image_url} alt={book.title} className="img-fluid"/>
@@ -55,7 +63,21 @@ function BookDetails() {
             <p><strong>Price:</strong> {book.price}</p>
             <p><strong>Published:</strong> {new Date(book.publication_date).toLocaleDateString()}</p>
             <p>{book.description}</p>
+
+            <div className="quantity-selector">
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                    id="quantity"
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                />
+            </div>
+
             <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
+
+
         </div>
     );
 }
