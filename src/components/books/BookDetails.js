@@ -62,7 +62,7 @@ function BookDetails() {
             <p><strong>Genre:</strong> {book.gen}</p>
             <p><strong>Price:</strong> {book.price}</p>
             <p><strong>Published:</strong> {new Date(book.publication_date).toLocaleDateString()}</p>
-            <p>{book.description}</p>
+            <p>{book.long_description}</p>
 
             <div className="quantity-selector">
                 <label htmlFor="quantity">Quantity:</label>

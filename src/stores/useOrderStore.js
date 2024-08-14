@@ -1,9 +1,10 @@
 import create from 'zustand';
 import { createOrder} from "../apiRoutes/ordersRoutes";
+import {updateBookStock} from "../apiRoutes/booksRoutes";
 
 const useOrderStore = create((set) => ({
     cart: [],
-    //orders: [],
+    orders: [],
 
     addToCart: (item) => set((state) => {
         const existingItem = state.cart.find((cartItem) => cartItem.id === item.id);
@@ -32,14 +33,29 @@ const useOrderStore = create((set) => ({
         cart: state.cart.filter((item) => item.id !== itemId)
     })),
 
-    placeOrder: async (orderData) => {
+    placeOrder: async (userId) => {
         try {
+            const orderData = {
+                user_id: userId,
+                items: useOrderStore.getState().cart.map(item => ({
+                    book_id: item.id,
+                    quantity: item.quantity,
+                })),
+            };
+
             const order = await createOrder(orderData);
 
-            set((state) => ({
-                orders: [...state.orders, order],
-                cart: []
+            await Promise.all(
+                orderData.items.map(async (item) => {
+                    await updateBookStock(item.book_id, item.quantity);
+                })
+            );
+
+            set(() => ({
+                orders: [...useOrderStore.getState().orders, order],
+                cart: [],
             }));
+
         } catch (error) {
             console.error('Error placing order:', error);
             throw error;

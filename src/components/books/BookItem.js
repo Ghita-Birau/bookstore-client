@@ -4,7 +4,7 @@ import defaultImage from "../../assets/default-book-cover.jpg";
 import { Link } from 'react-router-dom';
 
 function BookItem({ book }) {
-    const { id, title, author, publishing_house, gen, price, publication_date, image_url, description } = book;
+    const { id, title, author, publishing_house, gen, price, publication_date, stock, discount, is_favorite, image_url, short_description, long_description } = book;
 
     if (!title || !price) {
         return null;
@@ -31,7 +31,8 @@ function BookItem({ book }) {
         price,
         publication_date: formattedPublicationDate,
         image_url: image_url || defaultImage,
-        description: description || 'No description available'
+        short_description: short_description || 'No description available',
+        stock: stock || 'Out of stock'
     };
 
     const isUnknownOrUndefined = (value) => {
@@ -51,11 +52,13 @@ function BookItem({ book }) {
                     <div className="card-body d-flex flex-column justify-content-center">
                         <h5 className="card-title">{validatedBook.title}</h5>
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.author) ? 'text-muted' : ''}`}>Author: {validatedBook.author}</p>
-                        <p className={`card-text ${isUnknownOrUndefined(validatedBook.publishing_house) ? 'text-muted' : ''}`}>Publishing House: {validatedBook.publishing_house}</p>
+                        <p className={`card-text ${isUnknownOrUndefined(validatedBook.publishing_house) ? 'text-muted' : ''}`}>Publishing
+                            House: {validatedBook.publishing_house}</p>
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.gen) ? 'text-muted' : ''}`}>Genre: {validatedBook.gen}</p>
                         <p className="card-text text-success">Price: {validatedBook.price}</p>
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.publication_date) ? 'text-muted' : ''}`}>Published: {validatedBook.publication_date}</p>
-                        <p className={`card-text ${isUnknownOrUndefined(validatedBook.description) ? 'text-muted' : ''}`}>{validatedBook.description}</p>
+                        <p className={`card-text ${isUnknownOrUndefined(validatedBook.stock) ? 'text-muted' : ''}`}>Stock: {validatedBook.stock}</p>
+                        <p className={`card-text ${isUnknownOrUndefined(validatedBook.short_description) ? 'text-muted' : ''}`}>{validatedBook.short_description}</p>
                     </div>
                 </div>
             </div>

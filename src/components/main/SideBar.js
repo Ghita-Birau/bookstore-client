@@ -37,8 +37,8 @@ function SideBar() {
                         <h3 className="h5">{filter.label}</h3>
                         <PublicationDateRangeFilter
                             id="publication-date"
-                            startDate={filterOptions.startDate}
-                            endDate={filterOptions.endDate}
+                            startDate={filter.value.startDate}
+                            endDate={filter.value.endDate}
                         />
                     </div>
                 );

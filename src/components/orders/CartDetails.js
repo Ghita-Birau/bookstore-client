@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import useOrderStore from "../../stores/useOrderStore";
 
-function CartDetails() {
-    const { cart, updateQuantity, removeFromCart } = useOrderStore();
+function CartDetails({userId = 1}){
+    const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
     const [isVisible, setIsVisible] = useState(true);
 
     const parsePrice = (price) => {
@@ -29,6 +29,15 @@ function CartDetails() {
             removeFromCart(itemId);
         } else {
             updateQuantity(itemId, newQuantity);
+        }
+    };
+
+    const handlePlaceOrder = async () => {
+        try {
+            await placeOrder(userId);
+            alert('Order placed successfully!');
+        } catch (error) {
+            alert('Failed to place order. Please try again.');
         }
     };
 
@@ -79,7 +88,7 @@ function CartDetails() {
             </table>
             <h5>Total Price: ${calculateTotalPrice()}</h5>
             <button className="btn btn-secondary" onClick={handleExit}>Exit</button>
-            <button className="btn btn-primary">Place order</button>
+            <button className="btn btn-primary" onClick={handlePlaceOrder}>Place order</button>
         </div>
     );
 }

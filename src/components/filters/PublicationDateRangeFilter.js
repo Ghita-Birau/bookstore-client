@@ -17,7 +17,7 @@ function PublicationDateRangeFilter({ startDate, endDate }) {
                 type="date"
                 id="start-date"
                 value={startDate || ''}
-                onChange={(event) => handleDateChange('startDDate', event.target.value)}
+                onChange={(event) => handleDateChange('startDate', event.target.value)}
                 className="form-control mb-2"
             />
 
