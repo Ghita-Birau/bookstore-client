@@ -1,16 +1,25 @@
 import React, {useState} from 'react';
-import {FaUser, FaShoppingCart, FaHeart} from 'react-icons/fa';
+import {FaUser, FaShoppingCart, FaHeart, FaSignInAlt, FaUserPlus} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
 import useFilterStore from "../../stores/useFilterStore";
 import useOrderStore from "../../stores/useOrderStore";
 import CartDetails from "../orders/CartDetails";
+import {useNavigate} from "react-router-dom";
 
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();
+    const navigate = useNavigate();
 
+    const handleLoginClick = () => {
+        navigate('/login');
+    };
+
+    const handleRegisterClick = () => {
+        navigate('/register');
+    }
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
         if (value && value !== 'default') {
@@ -22,7 +31,7 @@ function Navbar() {
         }
     };
 
-    const { cart } = useOrderStore();
+    //const { cart } = useOrderStore();
     const [isCartVisible, setCartVisible] = useState(false);
 
     const toggleCartVisibility = () => {
@@ -60,14 +69,24 @@ function Navbar() {
                         </div>
                     </form>
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {/*<li className="nav-item">*/}
+                        {/*    <a className="nav-link" href="#">*/}
+                        {/*        <FaUser/> Account*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
+                        {/*<li className="nav-item">*/}
+                        {/*    <a className="nav-link" href="#">*/}
+                        {/*        <FaHeart/> Favorite*/}
+                        {/*    </a>*/}
+                        {/*</li>*/}
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
-                                <FaUser/> Account
+                            <a className="nav-link" href="#" onClick={handleLoginClick}>
+                                <FaSignInAlt/> Login
                             </a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">
-                                <FaHeart/> Favorite
+                            <a className="nav-link" href="#" onClick={handleRegisterClick}>
+                                <FaUserPlus/> Register
                             </a>
                         </li>
                         <li className="nav-item">
@@ -78,7 +97,7 @@ function Navbar() {
                     </ul>
                 </div>
             </div>
-            {isCartVisible && <CartDetails />}
+            {isCartVisible && <CartDetails/>}
         </nav>
     );
 }

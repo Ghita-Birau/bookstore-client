@@ -32,6 +32,11 @@ function BookDetails() {
     }, [id]);
 
     const handleAddToCart = () => {
+        if (quantity > book.stock) {
+            alert(`Only ${book.stock} copies available in stock. Please adjust the quantity.`);
+            return;
+        }
+
         addToCart({ ...book, quantity });
         setShowAlert(true)
         setTimeout(() => {
@@ -62,6 +67,7 @@ function BookDetails() {
             <p><strong>Genre:</strong> {book.gen}</p>
             <p><strong>Price:</strong> {book.price}</p>
             <p><strong>Published:</strong> {new Date(book.publication_date).toLocaleDateString()}</p>
+            <p><strong>Stock: </strong> {book.stock}</p>
             <p>{book.long_description}</p>
 
             <div className="quantity-selector">

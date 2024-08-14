@@ -55,3 +55,28 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
 }
+
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.navbar-nav .nav-item {
+    margin-left: 30px;
+}
+
+.navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link svg {
+    margin-right: 10px;
+}
+
+.search-form {
+    flex-grow: 1;
+    max-width: 800px;
+    margin-right: 20px;
+}

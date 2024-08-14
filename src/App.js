@@ -7,6 +7,8 @@ import Footer from './components/main/Footer';
 import BookDetails from './components/books/BookDetails';
 import OrderDetails from './components/orders/CartDetails';
 import './App.css';
+import Login from "./components/user/Login";
+import Register from "./components/user/Register";
 
 function App() {
 
@@ -15,6 +17,8 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/order/:orderId" element={<OrderDetails />} />
                 </Routes>
                 <div className="d-flex">
