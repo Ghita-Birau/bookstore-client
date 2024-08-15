@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Login.css';
+import useUserStore from "../../stores/useUserStore";
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const { user, setUser, login, error, loading } = useUserStore();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Logica de autentificare aici
-        console.log('Email:', email);
-        console.log('Password:', password);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser({ [name]: value });
+    };
 
-        // După autentificare, redirecționează utilizatorul la pagina principală sau altă pagină
-        navigate('/');
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await login();
+
+        if (!error) {
+            console.log("Login successful, navigating to home.");
+            navigate('/');
+        } else {
+            console.log("Login failed with error:", error);
+        }
     };
 
     return (
@@ -26,9 +33,10 @@ function Login() {
                     <input
                         type="email"
                         id="email"
+                        name="email"
                         className="form-control"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={user.email}
+                        onChange={handleChange}
                         required
                     />
                 </div>
@@ -37,9 +45,10 @@ function Login() {
                     <input
                         type="password"
                         id="password"
+                        name="password"
                         className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={user.password}
+                        onChange={handleChange}
                         required
                     />
                 </div>
