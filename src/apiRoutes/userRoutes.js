@@ -21,3 +21,23 @@ export const loginUser = async (userData) => {
         throw error;
     }
 };
+
+export const fetchUser = async (id) => {
+    try {
+        const response = await axios.get(`${apiURL}/user/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        throw  error;
+    }
+};
+
+export const updateUser = async (id) => {
+    try {
+        const response = await axios.put(`${apiURL}/user/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw  error;
+    }
+};

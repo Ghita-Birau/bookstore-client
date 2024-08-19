@@ -9,6 +9,7 @@ import OrderDetails from './components/orders/CartDetails';
 import './App.css';
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
+import MyAccount from "./components/user/MyAccount";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/account" element={<MyAccount />} />
                     <Route path="/order/:orderId" element={<OrderDetails />} />
                 </Routes>
                 <div className="d-flex">

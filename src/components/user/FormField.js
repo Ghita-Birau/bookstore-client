@@ -1,6 +1,12 @@
 import React from 'react';
 
-function RegisterFormField({ field, value, onChange }) {
+function FormField({ field, value, onValueChange }) {
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        onValueChange({ [name]: value });
+    };
+
     return (
         <div className="form-group">
             <label htmlFor={field.key}>{field.label}</label>
@@ -10,11 +16,11 @@ function RegisterFormField({ field, value, onChange }) {
                 name={field.key}
                 className="form-control"
                 value={value}
-                onChange={onChange}
+                onChange={handleChange}
                 required={field.required}
             />
         </div>
     );
 }
 
-export default RegisterFormField;
+export default FormField;

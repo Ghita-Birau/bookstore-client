@@ -1,24 +1,24 @@
 import React, {useState} from 'react';
 import useOrderStore from "../../stores/useOrderStore";
 
+const parsePrice = (price) => {
+    if (typeof price === 'string') {
+        price = price.replace(/[^\d.-]/g, '');
+    }
+
+    const parsed = parseFloat(price);
+    return isNaN(parsed) ? 0 : parsed;
+};
+
+const calculateTotalPricePerItem = (price, quantity) => {
+    const parsedPrice = parsePrice(price);
+    console.log('Parsed Price:', parsedPrice, 'Quantity:', quantity);
+    return (parsedPrice * quantity).toFixed(2);
+};
+
 function CartDetails({userId = 1}){
     const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
     const [isVisible, setIsVisible] = useState(true);
-
-    const parsePrice = (price) => {
-        if (typeof price === 'string') {
-            price = price.replace(/[^\d.-]/g, '');
-        }
-
-        const parsed = parseFloat(price);
-        return isNaN(parsed) ? 0 : parsed;
-    };
-
-    const calculateTotalPricePerItem = (price, quantity) => {
-        const parsedPrice = parsePrice(price);
-        console.log('Parsed Price:', parsedPrice, 'Quantity:', quantity);
-        return (parsedPrice * quantity).toFixed(2);
-    };
 
     const calculateTotalPrice = () => {
         return cart.reduce((total, item) => total + (parsePrice(item.price) * item.quantity), 0).toFixed(2);

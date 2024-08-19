@@ -5,13 +5,16 @@ import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
 import useFilterStore from "../../stores/useFilterStore";
 import useOrderStore from "../../stores/useOrderStore";
+import useUserStore from "../../stores/useUserStore";
 import CartDetails from "../orders/CartDetails";
 import {useNavigate} from "react-router-dom";
 
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();
+    const { isAuthenticated, logout } = useUserStore();
     const navigate = useNavigate();
+
 
     const handleLoginClick = () => {
         navigate('/login');
@@ -20,6 +23,20 @@ function Navbar() {
     const handleRegisterClick = () => {
         navigate('/register');
     }
+
+    const handleAccountClick = () => {
+        navigate('/account');
+    };
+
+    const handleFavoriteClick = () => {
+        navigate('/favorites');
+    };
+
+    const handleLogoutClick = () => {
+        logout();
+        navigate('/');
+    };
+
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
         if (value && value !== 'default') {
@@ -69,26 +86,38 @@ function Navbar() {
                         </div>
                     </form>
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                        {/*<li className="nav-item">*/}
-                        {/*    <a className="nav-link" href="#">*/}
-                        {/*        <FaUser/> Account*/}
-                        {/*    </a>*/}
-                        {/*</li>*/}
-                        {/*<li className="nav-item">*/}
-                        {/*    <a className="nav-link" href="#">*/}
-                        {/*        <FaHeart/> Favorite*/}
-                        {/*    </a>*/}
-                        {/*</li>*/}
-                        <li className="nav-item">
-                            <a className="nav-link" href="#" onClick={handleLoginClick}>
-                                <FaSignInAlt/> Login
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#" onClick={handleRegisterClick}>
-                                <FaUserPlus/> Register
-                            </a>
-                        </li>
+                        {isAuthenticated() ? (
+                            <>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={handleAccountClick}>
+                                        <FaUser/> My Account
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={handleFavoriteClick}>
+                                        <FaHeart/> Favorite
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={handleLogoutClick}>
+                                        <FaSignInAlt/> Logout
+                                    </a>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={handleLoginClick}>
+                                        <FaSignInAlt/> Login
+                                    </a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#" onClick={handleRegisterClick}>
+                                        <FaUserPlus/> Register
+                                    </a>
+                                </li>
+                            </>
+                        )}
                         <li className="nav-item">
                             <a className="nav-link" href="#" onClick={toggleCartVisibility}>
                                 <FaShoppingCart/> Cart

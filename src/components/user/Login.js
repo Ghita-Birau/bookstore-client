@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Login.css';
 import useUserStore from "../../stores/useUserStore";
+import FormField from "./FormField";
+
+const fields = [
+    { key: 'email', label: 'Email:', type: 'email' },
+    { key: 'password', label: 'Password:', type: 'password' },
+];
 
 function Login() {
     const { user, setUser, login, error, loading } = useUserStore();
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setUser({ [name]: value });
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         await login();
 
-        if (!error) {
+        if (!error && !loading) {
             console.log("Login successful, navigating to home.");
             navigate('/');
         } else {
@@ -26,34 +27,21 @@ function Login() {
 
     return (
         <div className="login-container">
+
             <h2>Login</h2>
+            {error && <div className="error">{error}</div>}
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="form-control"
-                        value={user.email}
-                        onChange={handleChange}
-                        required
+                {fields.map((field) => (
+                    <FormField
+                        key={field.key}
+                        field={field}
+                        value={user[field.key] || ''}
+                        onValueChange={setUser}
                     />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        className="form-control"
-                        value={user.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">
-                    Login
+                ))}
+
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Logging in...' : 'Login'}
                 </button>
                 <div className="forgot-password">
                     <a href="#">Forgot your password?</a>

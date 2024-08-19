@@ -12,3 +12,17 @@ export const createOrder = async (orderData) => {
     }
 };
 
+export const fetchOrdersByUser = async (userId) => {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await axios.get(`${apiURL}/orders-by-user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user orders:', error);
+        throw error;
+    }
+};
