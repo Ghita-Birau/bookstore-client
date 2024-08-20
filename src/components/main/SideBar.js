@@ -59,9 +59,9 @@ function SideBar() {
         <aside className="side-menu bg-light border-end p-3 d-flex flex-column">
 
             {filterOptions.filters && filterOptions.filters.map((filter, index) => (
-                <React.Fragment key={filter.key || index}>
-                    {renderFilterComponent(filter)}
-                </React.Fragment>
+                <div key={filter.key || index}>
+                    { renderFilterComponent(filter)}
+                </div>
             ))}
 
             <FilterCount/>

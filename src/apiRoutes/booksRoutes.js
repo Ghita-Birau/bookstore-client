@@ -31,16 +31,3 @@ export const fetchBook = async (id) => {
     }
 };
 
-export const updateBookStock = async (bookId, quantity) => {
-    try {
-        const response = await axios.put(`${apiURL}/book/${bookId}`, {
-            stock: quantity,
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error updating book stock:', error);
-        throw error;
-    }
-};
-
-

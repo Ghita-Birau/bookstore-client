@@ -1,27 +1,15 @@
 import create from 'zustand';
 import { createOrder} from "../apiRoutes/ordersRoutes";
-import {updateBookStock} from "../apiRoutes/booksRoutes";
 
 const useOrderStore = create((set) => ({
     cart: [],
     orders: [],
+    bookCache: new Map(),
+    showCart: false,
+    orderStatus: null,
 
-    addToCart: (item) => set((state) => {
-        const existingItem = state.cart.find((cartItem) => cartItem.id === item.id);
-        if (existingItem) {
-            return {
-                cart: state.cart.map((cartItem) =>
-                    cartItem.id === item.id
-                        ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
-                        : cartItem
-                ),
-            };
-        } else {
-            return {
-                cart: [...state.cart, { ...item, quantity: item.quantity || 1 }],
-            };
-        }
-    }),
+    openCart: () => set({ showCart: true }),
+    closeCart: () => set({ showCart: false }),
 
     updateQuantity: (itemId, newQuantity) => set((state) => ({
         cart: state.cart.map((item) =>
@@ -33,11 +21,29 @@ const useOrderStore = create((set) => ({
         cart: state.cart.filter((item) => item.id !== itemId)
     })),
 
+    addToCart: (item, quantity = 1) => set((state) => {
+        const existingItem = state.cart.find((cartItem) => cartItem.id === item.id);
+        if (existingItem) {
+            return {
+                cart: state.cart.map((cartItem) =>
+                    cartItem.id === item.id
+                        ? { ...cartItem, quantity: cartItem.quantity + quantity }
+                        : cartItem
+                ),
+            };
+        } else {
+            return {
+                cart: [...state.cart, { ...item, quantity }],
+            };
+        }
+    }),
+
     placeOrder: async (userId) => {
         try {
+            const state = useOrderStore.getState();
             const orderData = {
                 user_id: userId,
-                items: useOrderStore.getState().cart.map(item => ({
+                items: state.cart.map(item => ({
                     book_id: item.id,
                     quantity: item.quantity,
                 })),
@@ -45,15 +51,10 @@ const useOrderStore = create((set) => ({
 
             const order = await createOrder(orderData);
 
-            await Promise.all(
-                orderData.items.map(async (item) => {
-                    await updateBookStock(item.book_id, item.quantity);
-                })
-            );
-
             set(() => ({
-                orders: [...useOrderStore.getState().orders, order],
+                orders: [...state.orders, order],
                 cart: [],
+                orderStatus: 'success',
             }));
 
         } catch (error) {
@@ -61,6 +62,21 @@ const useOrderStore = create((set) => ({
             throw error;
         }
     },
+
+    getBookFromCache: (id) => {
+        const cache = useOrderStore.getState().bookCache;
+        return cache.get(id);
+    },
+
+    setBookInCache: (id, book) => {
+        set((state) => {
+            const newCache = new Map(state.bookCache);
+            newCache.set(id, book);
+            return { bookCache: newCache };
+        });
+    },
+
+    resetOrderStatus: () => set({ orderStatus: null })
 }));
 
 export default useOrderStore;

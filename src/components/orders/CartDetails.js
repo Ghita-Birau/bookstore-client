@@ -1,28 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import useOrderStore from "../../stores/useOrderStore";
+import { calculateTotalPricePerItem, calculateTotalPrice} from "./cartUtils";
 
-const parsePrice = (price) => {
-    if (typeof price === 'string') {
-        price = price.replace(/[^\d.-]/g, '');
-    }
 
-    const parsed = parseFloat(price);
-    return isNaN(parsed) ? 0 : parsed;
-};
-
-const calculateTotalPricePerItem = (price, quantity) => {
-    const parsedPrice = parsePrice(price);
-    console.log('Parsed Price:', parsedPrice, 'Quantity:', quantity);
-    return (parsedPrice * quantity).toFixed(2);
-};
-
-function CartDetails({userId = 1}){
+function CartDetails({onClose, userId = 1}){
     const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
-    const [isVisible, setIsVisible] = useState(true);
-
-    const calculateTotalPrice = () => {
-        return cart.reduce((total, item) => total + (parsePrice(item.price) * item.quantity), 0).toFixed(2);
-    };
 
     const handleQuantityChange = (itemId, newQuantity) => {
         if (newQuantity < 1) {
@@ -40,14 +22,6 @@ function CartDetails({userId = 1}){
             alert('Failed to place order. Please try again.');
         }
     };
-
-    const handleExit = () => {
-        setIsVisible(false);
-    }
-
-    if(!isVisible) {
-        return null;
-    }
 
     return (
         <div className="cart-details">
@@ -86,8 +60,8 @@ function CartDetails({userId = 1}){
                 ))}
                 </tbody>
             </table>
-            <h5>Total Price: ${calculateTotalPrice()}</h5>
-            <button className="btn btn-secondary" onClick={handleExit}>Exit</button>
+            <h5>Total Price: ${calculateTotalPrice(cart)}</h5>
+            <button className="btn btn-secondary" onClick={onClose}>Exit</button>
             <button className="btn btn-primary" onClick={handlePlaceOrder}>Place order</button>
         </div>
     );

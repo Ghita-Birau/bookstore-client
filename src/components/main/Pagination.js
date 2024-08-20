@@ -1,14 +1,14 @@
 import React from 'react';
 import '../../styles/Pagination.css';
 import useFilterStore from "../../stores/useFilterStore";
-const Pagination = ({ page, onPageChange }) => {
+const Pagination = () => {
 
-    const { limit, total, } = useFilterStore();
+    const { limit, total, page, setPage } = useFilterStore();
 
     const totalPages = Math.ceil(total / limit);
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
-            onPageChange(newPage);
+            setPage(newPage);
         }
     };
 

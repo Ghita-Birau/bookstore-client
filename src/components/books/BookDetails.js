@@ -4,7 +4,6 @@ import { fetchBook } from '../../apiRoutes/booksRoutes';
 import { useNavigate} from "react-router-dom";
 import useOrderStore from '../../stores/useOrderStore';
 
-const bookCache = new Map();
 function BookDetails() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -12,32 +11,46 @@ function BookDetails() {
     const [error, setError] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
     const [quantity, setQuantity] = useState(1);
-    const addToCart = useOrderStore((state) => state.addToCart)
 
-    useEffect(() => {
-        const loadBook = async () => {
-            if(bookCache.has(id)) {
-                setBook(bookCache.get(id));
+    const addToCart = useOrderStore((state) => state.addToCart);
+    const getBookFromCache = useOrderStore((state) => state.getBookFromCache);
+    const setBookInCache = useOrderStore((state) => state.setBookInCache);
+    const { orderStatus , resetOrderStatus} = useOrderStore();
+
+    const loadBook = async (ignoreCache = false) => {
+        if (!ignoreCache) {
+            const cachedBook = getBookFromCache(id);
+            if (cachedBook) {
+                setBook(cachedBook);
                 return;
             }
-            try {
-                const data = await fetchBook(id);
-                bookCache.set(id, data);
-                setBook(data);
-            } catch (error) {
-                setError(error.message);
-            }
-        };
+        }
+        try {
+            const data = await fetchBook(id);
+            setBookInCache(id, data);
+            setBook(data);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    useEffect(() => {
         loadBook();
     }, [id]);
+
+    useEffect(() => {
+        if (orderStatus === 'success') {
+            loadBook(true);
+            resetOrderStatus();
+        }
+    }, [orderStatus]);
 
     const handleAddToCart = () => {
         if (quantity > book.stock) {
             alert(`Only ${book.stock} copies available in stock. Please adjust the quantity.`);
             return;
         }
-
-        addToCart({ ...book, quantity });
+        addToCart({...book }, quantity);
         setShowAlert(true)
         setTimeout(() => {
             setShowAlert(false);
@@ -70,22 +83,20 @@ function BookDetails() {
             <p><strong>Stock: </strong> {book.stock}</p>
             <p>{book.long_description}</p>
 
-            <div className="quantity-selector">
-                <label htmlFor="quantity">Quantity:</label>
+            <div className="quantity-selector mb-2">
+                <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
                 <input
-                    id="quantity"
+                    id={`quantity-${id}`}
                     type="number"
                     min="1"
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                    className="form-control"
+                    style={{width: '70px'}}
                 />
             </div>
-
             <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
-
-
         </div>
     );
 }
-
 export default BookDetails;

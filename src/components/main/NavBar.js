@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {FaUser, FaShoppingCart, FaHeart, FaSignInAlt, FaUserPlus} from 'react-icons/fa';
+import {FaUser, FaShoppingCart, FaHeart, FaSignInAlt, FaUserPlus, FaSign} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
@@ -7,35 +7,13 @@ import useFilterStore from "../../stores/useFilterStore";
 import useOrderStore from "../../stores/useOrderStore";
 import useUserStore from "../../stores/useUserStore";
 import CartDetails from "../orders/CartDetails";
-import {useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();
     const { isAuthenticated, logout } = useUserStore();
-    const navigate = useNavigate();
-
-
-    const handleLoginClick = () => {
-        navigate('/login');
-    };
-
-    const handleRegisterClick = () => {
-        navigate('/register');
-    }
-
-    const handleAccountClick = () => {
-        navigate('/account');
-    };
-
-    const handleFavoriteClick = () => {
-        navigate('/favorites');
-    };
-
-    const handleLogoutClick = () => {
-        logout();
-        navigate('/');
-    };
+    const {showCart, openCart, closeCart} = useOrderStore();
 
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
@@ -46,13 +24,6 @@ function Navbar() {
                 setSort(field, sortOrder);
             }
         }
-    };
-
-    //const { cart } = useOrderStore();
-    const [isCartVisible, setCartVisible] = useState(false);
-
-    const toggleCartVisibility = () => {
-        setCartVisible(!isCartVisible);
     };
 
     return (
@@ -89,44 +60,44 @@ function Navbar() {
                         {isAuthenticated() ? (
                             <>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#" onClick={handleAccountClick}>
-                                        <FaUser/> My Account
-                                    </a>
+                                    <Link className="nav-link" to="/account">
+                                        <FaUser /> My Account
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#" onClick={handleFavoriteClick}>
-                                        <FaHeart/> Favorite
-                                    </a>
+                                    <Link className="nav-link" to="/favorites">
+                                        <FaHeart /> Favorite
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#" onClick={handleLogoutClick}>
-                                        <FaSignInAlt/> Logout
-                                    </a>
+                                    <Link className="nav-link" to="/" onClick={logout}>
+                                        <FaSignInAlt /> Logout
+                                    </Link>
                                 </li>
                             </>
                         ) : (
                             <>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#" onClick={handleLoginClick}>
-                                        <FaSignInAlt/> Login
-                                    </a>
+                                    <Link className="nav-link" to="/login">
+                                        <FaSignInAlt /> Login
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#" onClick={handleRegisterClick}>
-                                        <FaUserPlus/> Register
-                                    </a>
+                                    <Link className="nav-link" to="/register">
+                                        <FaUserPlus /> Register
+                                    </Link>
                                 </li>
                             </>
                         )}
                         <li className="nav-item">
-                            <a className="nav-link" href="#" onClick={toggleCartVisibility}>
-                                <FaShoppingCart/> Cart
-                            </a>
+                            <Link className="nav-link" to="#" onClick={openCart}>
+                                <FaShoppingCart /> Cart
+                            </Link>
                         </li>
                     </ul>
                 </div>
             </div>
-            {isCartVisible && <CartDetails/>}
+            {showCart && <CartDetails onClose={closeCart} />}
         </nav>
     );
 }

@@ -1,10 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../styles/BookItem.css';
 import defaultImage from "../../assets/default-book-cover.jpg";
 import { Link } from 'react-router-dom';
+import useOrderStore from "../../stores/useOrderStore";
 
 function BookItem({ book }) {
     const { id, title, author, publishing_house, gen, price, publication_date, stock, discount, is_favorite, image_url, short_description, long_description } = book;
+    const [quantity, setQuantity] = useState(1);
+    const addToCart = useOrderStore((state) => state.addToCart);
+
+    const handleAddToCart = () => {
+        if (quantity > stock) {
+            alert(`Only ${stock} copies available in stock. Please adjust the quantity.`);
+            return;
+        }
+
+        addToCart(book, quantity);
+        alert('Book added to cart!');
+    };
 
     if (!title || !price) {
         return null;
@@ -59,6 +72,20 @@ function BookItem({ book }) {
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.publication_date) ? 'text-muted' : ''}`}>Published: {validatedBook.publication_date}</p>
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.stock) ? 'text-muted' : ''}`}>Stock: {validatedBook.stock}</p>
                         <p className={`card-text ${isUnknownOrUndefined(validatedBook.short_description) ? 'text-muted' : ''}`}>{validatedBook.short_description}</p>
+                        <div className="quantity-selector mb-2">
+                            <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
+                            <input
+                                id={`quantity-${id}`}
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                                className="form-control"
+                                style={{width: '70px'}}
+                            />
+                        </div>
+
+                        <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
                     </div>
                 </div>
             </div>
