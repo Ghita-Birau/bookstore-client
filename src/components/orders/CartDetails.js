@@ -3,7 +3,7 @@ import useOrderStore from "../../stores/useOrderStore";
 import { calculateTotalPricePerItem, calculateTotalPrice} from "./cartUtils";
 
 
-function CartDetails({onClose, userId = 1}){
+function CartDetails({onClose}){
     const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
 
     const handleQuantityChange = (itemId, newQuantity) => {
@@ -16,7 +16,7 @@ function CartDetails({onClose, userId = 1}){
 
     const handlePlaceOrder = async () => {
         try {
-            await placeOrder(userId);
+            await placeOrder();
             alert('Order placed successfully!');
         } catch (error) {
             alert('Failed to place order. Please try again.');

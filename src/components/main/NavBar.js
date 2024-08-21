@@ -29,7 +29,7 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">
+                <a className="navbar-brand" href="/">
                     <img src={logo} alt="Logo" className="d-inline-block align-text-top logo-test"/>
                         BookStore
                 </a>

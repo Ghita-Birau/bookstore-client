@@ -14,9 +14,6 @@ function SideBar() {
         loadFilterOptions();
     },[]);
 
-
-    //console.log("Filter options:", filterOptions.filters);
-
     const renderFilterComponent = (filter) => {
 
         switch (filter.key) {

@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
-import { loginUser, registerUser } from "../apiRoutes/userRoutes";
+import {fetchUser, loginUser, registerUser, updateUser} from "../apiRoutes/userRoutes";
 
 const useUserStore = create(
     persist(
@@ -12,7 +12,6 @@ const useUserStore = create(
                 username: '',
                 email: '',
                 password: '',
-                token: null,
             },
             error: null,
             loading: false,
@@ -21,7 +20,7 @@ const useUserStore = create(
                 user: { ...state.user, ...userData },
             })),
 
-            isAuthenticated: () => !!get().user.token,
+            isAuthenticated: () => !!localStorage.getItem('token'),
 
             register: async () => {
                 set({ loading: true, error: null });
@@ -53,12 +52,11 @@ const useUserStore = create(
                     const response = await loginUser({ email, password });
 
                     if (response.status === 200) {
-                        const { token, user } = response.data;
+                        const { user } = response.data;
 
                         set({
                             user: {
                                 ...user,
-                                token,
                             },
                             loading: false,
                         });
@@ -71,6 +69,7 @@ const useUserStore = create(
             },
 
             logout: () => {
+                localStorage.removeItem('token');
                 set({
                     user: {
                         id: null,
@@ -79,11 +78,36 @@ const useUserStore = create(
                         username: '',
                         email: '',
                         password: '',
-                        token: null,
                     },
                     error: null,
                     loading: false,
                 });
+            },
+
+            loadUserDetails: async () => {
+                try {
+                    set({ loading: true });
+                    const token = localStorage.getItem('token');
+                    if (!token) throw new Error('No token found');
+
+                    const user = await fetchUser(token);
+                    set({ user, loading: false });
+                } catch (error) {
+                    set({ error: error.message, loading: false });
+                }
+            },
+
+            updateUser: async (updatedData) => {
+                try {
+                    set({ loading: true });
+                    const token = localStorage.getItem('token');
+                    if (!token) throw new Error('No token found');
+
+                    const user = await updateUser(updatedData, token);
+                    set({ user, loading: false });
+                } catch (error) {
+                    set({ error: error.message, loading: false });
+                }
             },
 
         }),

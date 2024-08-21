@@ -15,16 +15,22 @@ export const registerUser = async (userData) => {
 export const loginUser = async (userData) => {
     try {
         const response = await axios.post(`${apiURL}/login`, userData);
+        const token = response.data.token;
+        localStorage.setItem('token', token);
         return response;
     } catch (error) {
-        console.error('Error during registration:', error);
+        console.error('Error during login:', error);
         throw error;
     }
 };
 
-export const fetchUser = async (id) => {
+export const fetchUser = async (token) => {
     try {
-        const response = await axios.get(`${apiURL}/user/${id}`);
+        const response = await axios.get(`${apiURL}/user`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         console.error('Error fetching user:', error);
@@ -32,12 +38,17 @@ export const fetchUser = async (id) => {
     }
 };
 
-export const updateUser = async (id) => {
+export const updateUser = async (updatedData, token) => {
     try {
-        const response = await axios.put(`${apiURL}/user/${id}`);
+        const response = await axios.put(`${apiURL}/user`, updatedData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         console.error('Error updating user:', error);
-        throw  error;
+        throw error;
     }
 };
+

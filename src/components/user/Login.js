@@ -44,7 +44,7 @@ function Login() {
                     {loading ? 'Logging in...' : 'Login'}
                 </button>
                 <div className="forgot-password">
-                    <a href="#">Forgot your password?</a>
+                    <a href="/register">You don't have an account?</a>
                 </div>
             </form>
         </div>

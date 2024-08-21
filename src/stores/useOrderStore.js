@@ -1,5 +1,6 @@
 import create from 'zustand';
-import { createOrder} from "../apiRoutes/ordersRoutes";
+import {fetchOrdersByUser, placeOrder} from "../apiRoutes/ordersRoutes";
+import {fetchUser} from "../apiRoutes/userRoutes";
 
 const useOrderStore = create((set) => ({
     cart: [],
@@ -7,6 +8,7 @@ const useOrderStore = create((set) => ({
     bookCache: new Map(),
     showCart: false,
     orderStatus: null,
+    userOrder: [],
 
     openCart: () => set({ showCart: true }),
     closeCart: () => set({ showCart: false }),
@@ -38,18 +40,17 @@ const useOrderStore = create((set) => ({
         }
     }),
 
-    placeOrder: async (userId) => {
+    placeOrder: async () => {
         try {
             const state = useOrderStore.getState();
             const orderData = {
-                user_id: userId,
                 items: state.cart.map(item => ({
                     book_id: item.id,
                     quantity: item.quantity,
                 })),
             };
 
-            const order = await createOrder(orderData);
+            const order = await placeOrder(orderData);
 
             set(() => ({
                 orders: [...state.orders, order],
@@ -74,6 +75,16 @@ const useOrderStore = create((set) => ({
             newCache.set(id, book);
             return { bookCache: newCache };
         });
+    },
+
+    loadOrdersByUser: async () => {
+        try {
+            set({ loading: true });
+            const order = await fetchOrdersByUser();
+            set({ userOrders: order, loading: false });
+        } catch (error) {
+            set({ error: error.message, loading: false });
+        }
     },
 
     resetOrderStatus: () => set({ orderStatus: null })

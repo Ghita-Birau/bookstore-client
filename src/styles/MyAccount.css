@@ -1,0 +1,29 @@
+.my-account-container {
+    margin-left: 250px;
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.account-sections {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-details, .user-orders {
+    margin-bottom: 20px;
+}
+
+.user-details h2, .user-orders h2 {
+    margin-bottom: 15px;
+    color: #343a40;
+}
+
+.user-details form, .user-orders ul {
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
