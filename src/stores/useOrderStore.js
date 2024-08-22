@@ -1,6 +1,5 @@
 import create from 'zustand';
 import {fetchOrdersByUser, placeOrder} from "../apiRoutes/ordersRoutes";
-import {fetchUser} from "../apiRoutes/userRoutes";
 
 const useOrderStore = create((set) => ({
     cart: [],

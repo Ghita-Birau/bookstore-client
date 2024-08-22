@@ -3,19 +3,24 @@ import useUserStore from '../../stores/useUserStore';
 import useOrderStore from '../../stores/useOrderStore';
 import '../../styles/MyAccount.css';
 import UserOrders from './UserOrders';
-import UserDetails from './UserDetails';
+import ChangeUserDetails from './ChangeUserDetails';
+import UserDetailsDisplay from "./UserDetailsDisplay";
 
 function MyAccount() {
-    const { user, loadUserDetails, updateUser } = useUserStore();
+    const { loadUserDetails, updateStatus, resetUpdateStatus } = useUserStore();
     const { loadOrdersByUser, userOrders=[] } = useOrderStore();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        loadUserDetails();
+        loadOrdersByUser();
+    }, []);
+
+    useEffect(() => {
+        if(updateStatus === 'success') {
             loadUserDetails();
-            loadOrdersByUser();
+            resetUpdateStatus();
         }
-    }, [loadUserDetails, loadOrdersByUser]);
+    }, [updateStatus]);
 
     return (
         <div className="my-account-container">
@@ -25,9 +30,12 @@ function MyAccount() {
                     <h2>My Orders</h2>
                     <UserOrders orders={userOrders}/>
                 </div>
+                <div className="user-details-display">
+                    <UserDetailsDisplay/>
+                </div>
                 <div className="user-details">
-                    <h2>User Details</h2>
-                    <UserDetails user={user} updateUser={updateUser}/>
+                    <h2>Change User Details</h2>
+                    <ChangeUserDetails/>
                 </div>
             </div>
         </div>

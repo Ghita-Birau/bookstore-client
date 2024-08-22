@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Register.css';
 import useUserStore  from '../../stores/useUserStore';
@@ -13,12 +13,20 @@ const fields = [
 ];
 
 function Register() {
-    const { user, setUser, register, error, loading } = useUserStore();
+    const { register, error, loading } = useUserStore();
+    const [formData, setFormData] = useState({ firstname: '', lastname: '', username: '', email: '', password: ''});
     const navigate = useNavigate();
+
+    const handleFieldChange = (updatedField) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            ...updatedField,
+        }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await register();
+        await register(formData);
 
         if (!error  && !loading) {
             console.log("Registration successful, navigating to login.");
@@ -37,8 +45,8 @@ function Register() {
                     <FormField
                         key={field.key}
                         field={field}
-                        value={user[field.key] || ''}
-                        onValueChange={setUser}
+                        value={formData[field.key] || ''}
+                        onValueChange={handleFieldChange}
                     />
                 ))}
                 <button type="submit" className="btn btn-primary" disabled={loading}>

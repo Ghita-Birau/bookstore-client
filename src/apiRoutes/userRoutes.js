@@ -24,8 +24,9 @@ export const loginUser = async (userData) => {
     }
 };
 
-export const fetchUser = async (token) => {
+export const fetchUser = async () => {
     try {
+        const token = localStorage.getItem('token');
         const response = await axios.get(`${apiURL}/user`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -38,8 +39,10 @@ export const fetchUser = async (token) => {
     }
 };
 
-export const updateUser = async (updatedData, token) => {
+
+export const updateUser = async (updatedData) => {
     try {
+        const token = localStorage.getItem('token');
         const response = await axios.put(`${apiURL}/user`, updatedData, {
             headers: {
                 Authorization: `Bearer ${token}`

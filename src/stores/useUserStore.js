@@ -5,34 +5,17 @@ import {fetchUser, loginUser, registerUser, updateUser} from "../apiRoutes/userR
 const useUserStore = create(
     persist(
         (set, get) => ({
-            user: {
-                id: null,
-                firstname: '',
-                lastname: '',
-                username: '',
-                email: '',
-                password: '',
-            },
+            user: [],
             error: null,
             loading: false,
-
-            setUser: (userData) => set((state) => ({
-                user: { ...state.user, ...userData },
-            })),
+            updateStatus: null,
 
             isAuthenticated: () => !!localStorage.getItem('token'),
 
-            register: async () => {
+            register: async (formData) => {
                 set({ loading: true, error: null });
                 try {
-                    const user = get().user;
-
-                    const userData = {
-                        ...user,
-                        role: 'user',
-                    };
-
-                    const response = await registerUser(userData);
+                    const response = await registerUser(formData);
 
                     if (response.status === 201) {
                         set({ loading: false });
@@ -44,22 +27,15 @@ const useUserStore = create(
                 }
             },
 
-            login: async () => {
+            login: async (formData) => {
                 set({ loading: true, error: null });
                 try {
-                    const { email, password } = get().user;
-
-                    const response = await loginUser({ email, password });
+                    const response = await loginUser(formData);
 
                     if (response.status === 200) {
-                        const { user } = response.data;
-
-                        set({
-                            user: {
-                                ...user,
-                            },
-                            loading: false,
-                        });
+                        const { token } = response.data;
+                        localStorage.setItem('token', token);
+                        set({ loading: false});
                     } else {
                         set({ error: 'Login failed. Please check your credentials.', loading: false });
                     }
@@ -71,26 +47,16 @@ const useUserStore = create(
             logout: () => {
                 localStorage.removeItem('token');
                 set({
-                    user: {
-                        id: null,
-                        firstname: '',
-                        lastname: '',
-                        username: '',
-                        email: '',
-                        password: '',
-                    },
                     error: null,
-                    loading: false,
+                    loading: false
                 });
             },
 
             loadUserDetails: async () => {
                 try {
                     set({ loading: true });
-                    const token = localStorage.getItem('token');
-                    if (!token) throw new Error('No token found');
-
-                    const user = await fetchUser(token);
+                    const user = await fetchUser();
+                    if (!user) throw new Error('User data not found');
                     set({ user, loading: false });
                 } catch (error) {
                     set({ error: error.message, loading: false });
@@ -100,16 +66,21 @@ const useUserStore = create(
             updateUser: async (updatedData) => {
                 try {
                     set({ loading: true });
-                    const token = localStorage.getItem('token');
-                    if (!token) throw new Error('No token found');
 
-                    const user = await updateUser(updatedData, token);
-                    set({ user, loading: false });
+                    const updatedUser = await updateUser(updatedData).then(()=>{
+                        set(() => ({
+                            user: updatedUser,
+                            loading: false,
+                            updateStatus: 'success',
+                        }));
+                    });
+
                 } catch (error) {
                     set({ error: error.message, loading: false });
                 }
             },
 
+            resetUpdateStatus: () => set({updateStatus: null})
         }),
         {
             name: 'user-storage',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Login.css';
 import useUserStore from "../../stores/useUserStore";
@@ -10,12 +10,20 @@ const fields = [
 ];
 
 function Login() {
-    const { user, setUser, login, error, loading } = useUserStore();
+    const { login, error, loading } = useUserStore();
+    const [formData, setFormData] = useState({ email: '', password: ''});
     const navigate = useNavigate();
+
+    const handleFieldChange = (updatedField) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            ...updatedField,
+        }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await login();
+        await login(formData);
 
         if (!error && !loading) {
             console.log("Login successful, navigating to home.");
@@ -35,8 +43,8 @@ function Login() {
                     <FormField
                         key={field.key}
                         field={field}
-                        value={user[field.key] || ''}
-                        onValueChange={setUser}
+                        value={formData[field.key] || ''}
+                        onValueChange={handleFieldChange}
                     />
                 ))}
 
