@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {FaUser, FaShoppingCart, FaHeart, FaSignInAlt, FaUserPlus, FaSign} from 'react-icons/fa';
+import React from 'react';
+import {
+    FaUser,
+    FaShoppingCart,
+    FaHeart,
+    FaSignInAlt,
+    FaUserPlus,
+    FaList
+} from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
@@ -29,10 +36,10 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
             <div className="container-fluid">
-                <a className="navbar-brand" href="/">
+                <Link className="navbar-brand" to="/">
                     <img src={logo} alt="Logo" className="d-inline-block align-text-top logo-test"/>
-                        BookStore
-                </a>
+                    BookStore
+                </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -61,17 +68,22 @@ function Navbar() {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/account">
-                                        <FaUser /> My Account
+                                        <FaUser/> My Account
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/myOrders">
+                                        <FaList/> My orders
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/favorites">
-                                        <FaHeart /> Favorite
+                                        <FaHeart/> Favorite
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/" onClick={logout}>
-                                        <FaSignInAlt /> Logout
+                                        <FaSignInAlt/> Logout
                                     </Link>
                                 </li>
                             </>
@@ -79,25 +91,25 @@ function Navbar() {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/login">
-                                        <FaSignInAlt /> Login
+                                        <FaSignInAlt/> Login
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/register">
-                                        <FaUserPlus /> Register
+                                        <FaUserPlus/> Register
                                     </Link>
                                 </li>
                             </>
                         )}
                         <li className="nav-item">
                             <Link className="nav-link" to="#" onClick={openCart}>
-                                <FaShoppingCart /> Cart
+                                <FaShoppingCart/> Cart
                             </Link>
                         </li>
                     </ul>
                 </div>
             </div>
-            {showCart && <CartDetails onClose={closeCart} />}
+            {showCart && <CartDetails onClose={closeCart}/>}
         </nav>
     );
 }

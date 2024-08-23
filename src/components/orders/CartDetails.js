@@ -5,7 +5,6 @@ import { calculateTotalPricePerItem, calculateTotalPrice} from "./cartUtils";
 
 function CartDetails({onClose}){
     const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
-
     const handleQuantityChange = (itemId, newQuantity) => {
         if (newQuantity < 1) {
             removeFromCart(itemId);

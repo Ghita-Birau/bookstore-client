@@ -15,7 +15,6 @@ function BookDetails() {
     const addToCart = useOrderStore((state) => state.addToCart);
     const getBookFromCache = useOrderStore((state) => state.getBookFromCache);
     const setBookInCache = useOrderStore((state) => state.setBookInCache);
-    const { orderStatus , resetOrderStatus} = useOrderStore();
 
     const loadBook = async (ignoreCache = false) => {
         if (!ignoreCache) {
@@ -39,11 +38,11 @@ function BookDetails() {
     }, [id]);
 
     useEffect(() => {
-        if (orderStatus === 'success') {
-            loadBook(true);
-            resetOrderStatus();
+        const cachedBook = getBookFromCache(id);
+        if (cachedBook) {
+            setBook(cachedBook);
         }
-    }, [orderStatus]);
+    }, [getBookFromCache, id]);
 
     const handleAddToCart = () => {
         if (quantity > book.stock) {

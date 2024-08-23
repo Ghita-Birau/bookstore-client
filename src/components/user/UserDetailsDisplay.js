@@ -1,7 +1,12 @@
 import useUserStore from '../../stores/useUserStore';
-
+import {useEffect} from "react";
 function UserDetailsDisplay() {
-    const { user, loading, error } = useUserStore();
+
+    const {  loadUserDetails, user, loading, error} = useUserStore();
+
+    useEffect(() => {
+        loadUserDetails();
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {updateUser} from "../../apiRoutes/userRoutes";
 import FormField from "./FormField";
+import {useNavigate} from "react-router-dom";
 
 const fields = [
     { key: 'firstname', label: 'First Name:', type: 'text' },
@@ -12,6 +13,7 @@ const fields = [
 
 function ChangeUserDetails() {
     const [formData, setFormData] = useState({ firstname: '', lastname: '', username: '', email: '', password: ''});
+    const navigate = useNavigate();
     const handleFieldChange = (updatedField) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -21,7 +23,14 @@ function ChangeUserDetails() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await updateUser(formData);
+        try {
+            await updateUser(formData);
+            console.log('User updated successfully, redirecting now...');
+            navigate('/account');
+            console.log('Redirected');
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
     };
 
     return (

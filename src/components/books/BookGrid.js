@@ -3,23 +3,13 @@ import '../../styles/BookGrid.css';
 import BookItem from "./BookItem";
 import useFilterStore from '../../stores/useFilterStore';
 import Pagination from "../main/Pagination";
-import useOrderStore from "../../stores/useOrderStore";
-
 function BookGrid() {
 
     const { filters, books, page, loadBooks, sort} = useFilterStore();
-    const { orderStatus, resetOrderStatus } = useOrderStore();
 
     useEffect(() => {
         loadBooks();
     }, [filters, page, sort]);
-
-    useEffect(() => {
-        if (orderStatus === 'success') {
-            loadBooks();
-            resetOrderStatus();
-        }
-    }, [orderStatus]);
 
     const filterBooks = Array.isArray(books) ? books.filter(book => book.title && book.price) : [];
 

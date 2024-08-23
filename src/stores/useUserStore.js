@@ -8,7 +8,8 @@ const useUserStore = create(
             user: [],
             error: null,
             loading: false,
-            updateStatus: null,
+            //updateStatus: null,
+            isEditing: false,
 
             isAuthenticated: () => !!localStorage.getItem('token'),
 
@@ -67,20 +68,22 @@ const useUserStore = create(
                 try {
                     set({ loading: true });
 
-                    const updatedUser = await updateUser(updatedData).then(()=>{
+                    const updatedUser = await updateUser(updatedData);
                         set(() => ({
                             user: updatedUser,
                             loading: false,
-                            updateStatus: 'success',
+                            isEditing: true,
+                            //updateStatus: 'success',
                         }));
-                    });
-
                 } catch (error) {
                     set({ error: error.message, loading: false });
                 }
             },
 
-            resetUpdateStatus: () => set({updateStatus: null})
+            //resetUpdateStatus: () => set({updateStatus: null}),
+
+            //handleEditClick: () => set({ isEditing: true }),
+            handleCancelClick: () => set({isEditing: false}),
         }),
         {
             name: 'user-storage',

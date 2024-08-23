@@ -1,42 +1,38 @@
-import React, { useEffect } from 'react';
-import useUserStore from '../../stores/useUserStore';
-import useOrderStore from '../../stores/useOrderStore';
-import '../../styles/MyAccount.css';
-import UserOrders from './UserOrders';
+import React, { useState } from 'react';
+import UserDetailsDisplay from './UserDetailsDisplay';
 import ChangeUserDetails from './ChangeUserDetails';
-import UserDetailsDisplay from "./UserDetailsDisplay";
+import '../../styles/MyAccount.css';
+import useUserStore from "../../stores/useUserStore";
 
 function MyAccount() {
-    const { loadUserDetails, updateStatus, resetUpdateStatus } = useUserStore();
-    const { loadOrdersByUser, userOrders=[] } = useOrderStore();
+    const {handleEditClick, handleCancelClick, isEditing} = useUserStore();
 
-    useEffect(() => {
-        loadUserDetails();
-        loadOrdersByUser();
-    }, []);
-
-    useEffect(() => {
-        if(updateStatus === 'success') {
-            loadUserDetails();
-            resetUpdateStatus();
-        }
-    }, [updateStatus]);
+    // const handleEditClick = () => {
+    //     set({ isEditing: true });
+    // };
+    //
+    // const handleCancelClick = () => {
+    //     setIsEditing(false);
+    // };
 
     return (
         <div className="my-account-container">
-            <h1>My Account</h1>
             <div className="account-sections">
-                <div className="user-orders">
-                    <h2>My Orders</h2>
-                    <UserOrders orders={userOrders}/>
-                </div>
-                <div className="user-details-display">
-                    <UserDetailsDisplay/>
-                </div>
-                <div className="user-details">
-                    <h2>Change User Details</h2>
-                    <ChangeUserDetails/>
-                </div>
+                {!isEditing ? (
+                    <div className="user-details-display">
+                        <UserDetailsDisplay />
+                        <button onClick={handleEditClick} className="btn btn-primary">
+                            Change Details
+                        </button>
+                    </div>
+                ) : (
+                    <div className="user-details">
+                        <ChangeUserDetails />
+                        <button onClick={handleCancelClick} className="btn btn-secondary">
+                            Cancel
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

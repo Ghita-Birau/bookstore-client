@@ -6,7 +6,6 @@ const useOrderStore = create((set) => ({
     orders: [],
     bookCache: new Map(),
     showCart: false,
-    orderStatus: null,
     userOrder: [],
 
     openCart: () => set({ showCart: true }),
@@ -50,13 +49,22 @@ const useOrderStore = create((set) => ({
             };
 
             const order = await placeOrder(orderData);
+            console.log("Send order:", order);
+            // set(() => ({
+            //     orders: [...state.orders, order],
+            //     cart: [],
+            // }));
 
-            set(() => ({
-                orders: [...state.orders, order],
-                cart: [],
-                orderStatus: 'success',
-            }));
+            const newCache = new Map(state.bookCache);
+            orderData.items.forEach(item => {
+                let book = newCache.get(item.book_id);
+                if (book) {
+                    book.stock -= item.quantity;
+                    newCache.set(item.book_id, book);
+                }
+            });
 
+            set({ orders: [...state.orders, order], cart: [], bookCache: newCache });
         } catch (error) {
             console.error('Error placing order:', error);
             throw error;
@@ -81,12 +89,16 @@ const useOrderStore = create((set) => ({
             set({ loading: true });
             const order = await fetchOrdersByUser();
             set({ userOrders: order, loading: false });
+
+            const allBookIds = order.flatMap(order =>
+                order.items.map(item => item.book_id)
+            );
+            set({ bookIdsInOrders: allBookIds });
+
         } catch (error) {
             set({ error: error.message, loading: false });
         }
     },
-
-    resetOrderStatus: () => set({ orderStatus: null })
 }));
 
 export default useOrderStore;
