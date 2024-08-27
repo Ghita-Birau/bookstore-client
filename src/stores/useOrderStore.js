@@ -1,5 +1,7 @@
 import create from 'zustand';
 import {fetchOrdersByUser, placeOrder} from "../apiRoutes/ordersRoutes";
+import {fetchBook} from "../apiRoutes/booksRoutes";
+import useFilterStore from "./useFilterStore";
 
 const useOrderStore = create((set) => ({
     cart: [],
@@ -22,6 +24,7 @@ const useOrderStore = create((set) => ({
     })),
 
     addToCart: (item, quantity = 1) => set((state) => {
+        console.log("Adding to cart:", item);
         const existingItem = state.cart.find((cartItem) => cartItem.id === item.id);
         if (existingItem) {
             return {
@@ -38,6 +41,31 @@ const useOrderStore = create((set) => ({
         }
     }),
 
+    cacheBook: async (id) => {
+        const state = useOrderStore.getState();
+
+        const cachedBook = state.getBookFromCache(id);
+        if (cachedBook) {
+            console.log(`Cache hit for book ID ${id}`, cachedBook);
+            return cachedBook;
+        }
+
+        console.log(`Fetching book ID ${id} from API`);
+
+        try {
+            const data = await fetchBook(id);
+            console.log("Fetched data to cache:", data);
+
+            state.setBookInCache(id, data);
+            console.log("Updated cache:", Array.from(state.bookCache.entries()));
+
+            return data;
+        } catch (error) {
+            console.error(`Error fetching book with ID ${id}:`, error);
+            throw error;
+        }
+    },
+
     placeOrder: async () => {
         try {
             const state = useOrderStore.getState();
@@ -49,27 +77,43 @@ const useOrderStore = create((set) => ({
             };
 
             const order = await placeOrder(orderData);
-            console.log("Send order:", order);
-            // set(() => ({
-            //     orders: [...state.orders, order],
-            //     cart: [],
-            // }));
+            console.log("ORDER:", order);
+
+            if (!order.items || !Array.isArray(order.items)) {
+                throw new Error("Structura comenzii nu este corectă sau `items` este absent.");
+            }
 
             const newCache = new Map(state.bookCache);
-            orderData.items.forEach(item => {
-                let book = newCache.get(item.book_id);
-                if (book) {
-                    book.stock -= item.quantity;
-                    newCache.set(item.book_id, book);
-                }
-            });
+            const updatedBooks = [];
+
+            for (const item of order.items) {
+                const bookId = String(item.book_id);
+                const updatedStock = item.updated_stock;
+                console.log(`Processing book ID ${bookId} with updated stock: ${updatedStock}`);
+
+                const cachedBook = await state.cacheBook(bookId);
+
+                cachedBook.stock = updatedStock;
+                newCache.set(bookId, cachedBook);
+                updatedBooks.push(cachedBook);
+            }
 
             set({ orders: [...state.orders, order], cart: [], bookCache: newCache });
+
+            const filterStore = useFilterStore.getState();
+            const updatedBookList = filterStore.books.map(book =>
+                updatedBooks.find(updatedBook => updatedBook.id === book.id) || book
+            );
+
+            useFilterStore.setState({ books: updatedBookList });
+
+            return order;
         } catch (error) {
             console.error('Error placing order:', error);
             throw error;
         }
     },
+
 
     getBookFromCache: (id) => {
         const cache = useOrderStore.getState().bookCache;
@@ -80,6 +124,7 @@ const useOrderStore = create((set) => ({
         set((state) => {
             const newCache = new Map(state.bookCache);
             newCache.set(id, book);
+            console.log("Cache after update:", Array.from(newCache.entries()));
             return { bookCache: newCache };
         });
     },

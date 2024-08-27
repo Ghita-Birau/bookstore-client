@@ -22,6 +22,9 @@ function Navbar() {
     const { isAuthenticated, logout } = useUserStore();
     const {showCart, openCart, closeCart} = useOrderStore();
 
+    const userStorage = localStorage.getItem('user-storage');
+    const userData = userStorage ? JSON.parse(userStorage) : null;
+    const username = userData?.state?.user?.username;
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
         if (value && value !== 'default') {
@@ -68,7 +71,7 @@ function Navbar() {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/account">
-                                        <FaUser/> My Account
+                                        <FaUser/> {username ? username : "My Account"}
                                     </Link>
                                 </li>
                                 <li className="nav-item">

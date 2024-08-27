@@ -24,10 +24,10 @@ export const fetchBooks = async (filters, sortBy, sortOrder, limit, page) => {
 export const fetchBook = async (id) => {
     try {
         const response = await axios.get(`${apiURL}/book/${id}`);
+        console.log("Book data fetched:", response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching book:', error);
         throw  error;
     }
 };
-

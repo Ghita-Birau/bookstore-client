@@ -2,7 +2,6 @@ import React from 'react';
 import useOrderStore from "../../stores/useOrderStore";
 import { calculateTotalPricePerItem, calculateTotalPrice} from "./cartUtils";
 
-
 function CartDetails({onClose}){
     const { cart, updateQuantity, removeFromCart, placeOrder } = useOrderStore();
     const handleQuantityChange = (itemId, newQuantity) => {
@@ -15,10 +14,12 @@ function CartDetails({onClose}){
 
     const handlePlaceOrder = async () => {
         try {
+            console.log(cart);
             await placeOrder();
-            alert('Order placed successfully!');
+            alert('Order placed and books updated successfully!');
+            onClose();
         } catch (error) {
-            alert('Failed to place order. Please try again.');
+            alert('Failed to place order or update books. Please try again.');
         }
     };
 

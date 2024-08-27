@@ -15,6 +15,8 @@ function BookDetails() {
     const addToCart = useOrderStore((state) => state.addToCart);
     const getBookFromCache = useOrderStore((state) => state.getBookFromCache);
     const setBookInCache = useOrderStore((state) => state.setBookInCache);
+    const {bookCache} = useOrderStore();
+
 
     const loadBook = async (ignoreCache = false) => {
         if (!ignoreCache) {
@@ -35,7 +37,7 @@ function BookDetails() {
 
     useEffect(() => {
         loadBook();
-    }, [id]);
+    }, [id, bookCache]);
 
     useEffect(() => {
         const cachedBook = getBookFromCache(id);
