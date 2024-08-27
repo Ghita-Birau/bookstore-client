@@ -16,10 +16,14 @@ function CartDetails({onClose}){
         try {
             console.log(cart);
             await placeOrder();
-            alert('Order placed and books updated successfully!');
             onClose();
+            alert('Order placed and books updated successfully!');
         } catch (error) {
-            alert('Failed to place order or update books. Please try again.');
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(`Error: ${error.response.data.message}`);
+            } else {
+                alert('Failed to place order or update books. Please try again.');
+            }
         }
     };
 

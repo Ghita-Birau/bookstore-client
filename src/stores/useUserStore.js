@@ -8,7 +8,6 @@ const useUserStore = create(
             user: [],
             error: null,
             loading: false,
-            //updateStatus: null,
             isEditing: false,
 
             isAuthenticated: () => !!localStorage.getItem('token'),
@@ -73,16 +72,13 @@ const useUserStore = create(
                             user: updatedUser,
                             loading: false,
                             isEditing: true,
-                            //updateStatus: 'success',
                         }));
                 } catch (error) {
                     set({ error: error.message, loading: false });
                 }
             },
 
-            //resetUpdateStatus: () => set({updateStatus: null}),
-
-            //handleEditClick: () => set({ isEditing: true }),
+            handleEditClick: () => set({ isEditing: true }),
             handleCancelClick: () => set({isEditing: false}),
         }),
         {

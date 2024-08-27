@@ -5,15 +5,7 @@ import '../../styles/MyAccount.css';
 import useUserStore from "../../stores/useUserStore";
 
 function MyAccount() {
-    const {handleEditClick, handleCancelClick, isEditing} = useUserStore();
-
-    // const handleEditClick = () => {
-    //     set({ isEditing: true });
-    // };
-    //
-    // const handleCancelClick = () => {
-    //     setIsEditing(false);
-    // };
+    const {handleEditClick, isEditing} = useUserStore();
 
     return (
         <div className="my-account-container">
@@ -22,15 +14,12 @@ function MyAccount() {
                     <div className="user-details-display">
                         <UserDetailsDisplay />
                         <button onClick={handleEditClick} className="btn btn-primary">
-                            Change Details
+                            Edit My Details
                         </button>
                     </div>
                 ) : (
                     <div className="user-details">
                         <ChangeUserDetails />
-                        <button onClick={handleCancelClick} className="btn btn-secondary">
-                            Cancel
-                        </button>
                     </div>
                 )}
             </div>

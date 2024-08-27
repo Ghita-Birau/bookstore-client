@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {updateUser} from "../../apiRoutes/userRoutes";
 import FormField from "./FormField";
 import {useNavigate} from "react-router-dom";
+import useUserStore from "../../stores/useUserStore";
 
 const fields = [
     { key: 'firstname', label: 'First Name:', type: 'text' },
@@ -12,8 +13,8 @@ const fields = [
 ];
 
 function ChangeUserDetails() {
+    const {handleCancelClick} = useUserStore();
     const [formData, setFormData] = useState({ firstname: '', lastname: '', username: '', email: '', password: ''});
-    const navigate = useNavigate();
     const handleFieldChange = (updatedField) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -26,7 +27,8 @@ function ChangeUserDetails() {
         try {
             await updateUser(formData);
             console.log('User updated successfully, redirecting now...');
-            navigate('/account');
+            //navigate('/account');
+            handleCancelClick();
             console.log('Redirected');
         } catch (error) {
             console.error('Error updating user:', error);
