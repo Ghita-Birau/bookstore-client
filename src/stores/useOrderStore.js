@@ -1,5 +1,5 @@
 import create from 'zustand';
-import {fetchOrdersByUser, placeOrder} from "../apiRoutes/ordersRoutes";
+import {fetchOrders, placeOrder} from "../apiRoutes/ordersRoutes";
 import {fetchBook} from "../apiRoutes/booksRoutes";
 import useFilterStore from "./useFilterStore";
 
@@ -114,7 +114,6 @@ const useOrderStore = create((set) => ({
         }
     },
 
-
     getBookFromCache: (id) => {
         const cache = useOrderStore.getState().bookCache;
         return cache.get(id);
@@ -132,7 +131,7 @@ const useOrderStore = create((set) => ({
     loadOrdersByUser: async () => {
         try {
             set({ loading: true });
-            const order = await fetchOrdersByUser();
+            const order = await fetchOrders();
             set({ userOrders: order, loading: false });
 
             const allBookIds = order.flatMap(order =>

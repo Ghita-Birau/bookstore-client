@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchBook } from '../../apiRoutes/booksRoutes';
+import {deleteBook, fetchBook, updateBookStock} from '../../apiRoutes/booksRoutes';
 import { useNavigate} from "react-router-dom";
 import useOrderStore from '../../stores/useOrderStore';
+import {jwtDecode} from "jwt-decode";
+import UpdateStockModal from "./UpdateStockModal";
 
 function BookDetails() {
     const { id } = useParams();
@@ -11,6 +13,7 @@ function BookDetails() {
     const [error, setError] = useState(null);
     const [showAlert, setShowAlert] = useState(false);
     const [quantity, setQuantity] = useState(1);
+    const [showModal, setShowModal] = useState(false);
 
     const addToCart = useOrderStore((state) => state.addToCart);
     const getBookFromCache = useOrderStore((state) => state.getBookFromCache);
@@ -18,6 +21,13 @@ function BookDetails() {
     const {bookCache} = useOrderStore();
 
 
+    const token = localStorage.getItem('token');
+    let role = null;
+
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        role = decodedToken.role;
+    }
     const loadBook = async (ignoreCache = false) => {
         if (!ignoreCache) {
             const cachedBook = getBookFromCache(id);
@@ -58,6 +68,23 @@ function BookDetails() {
         }, 2000);
     };
 
+    const handleUpdate = () => {
+        setShowModal(true);
+    };
+    const handleModalClose = () => {
+        setShowModal(false);
+    };
+
+    const handleDelete = async () => {
+        try {
+            await deleteBook(id);
+            alert('Book deleted successfully');
+            navigate('/');
+        } catch (error) {
+            alert('Failed to delete book. Please try again.');
+        }
+    };
+
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -84,20 +111,45 @@ function BookDetails() {
             <p><strong>Stock: </strong> {book.stock}</p>
             <p>{book.long_description}</p>
 
-            <div className="quantity-selector mb-2">
-                <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
-                <input
-                    id={`quantity-${id}`}
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                    className="form-control"
-                    style={{width: '70px'}}
-                />
-            </div>
-            <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
+            {role !== 'admin' ? (
+                <>
+                    <div className="quantity-selector mb-2">
+                        <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
+                        <input
+                            id={`quantity-${id}`}
+                            type="number"
+                            min="1"
+                            value={quantity}
+                            onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                            className="form-control"
+                            style={{width: '70px'}}
+                            disabled={book.stock === 0}
+                        />
+                    </div>
+                    <button className="btn btn-primary" onClick={handleAddToCart} disabled={book.stock === 0}>
+                        {book.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </button>
+                </>
+            ) : (
+                <div className="d-flex">
+                    <button className="btn btn-primary me-2" onClick={handleUpdate}>
+                        Update
+                    </button>
+                    <button className="btn btn-danger" onClick={handleDelete}>
+                        Delete
+                    </button>
+                </div>
+            )}
+
+            <UpdateStockModal
+                show={showModal}
+                handleClose={handleModalClose}
+                bookId={id}
+                currentStock={book.stock}
+                onUpdate={updateBookStock}
+            />
         </div>
     );
 }
+
 export default BookDetails;

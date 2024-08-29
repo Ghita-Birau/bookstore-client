@@ -18,10 +18,10 @@ export const placeOrder = async (orderData) => {
     }
 };
 
-export const fetchOrdersByUser = async () => {
+export const fetchOrders = async () => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${apiURL}/order`, {
+        const response = await axios.get(`${apiURL}/orders`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

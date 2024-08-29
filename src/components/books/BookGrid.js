@@ -3,13 +3,15 @@ import '../../styles/BookGrid.css';
 import BookItem from "./BookItem";
 import useFilterStore from '../../stores/useFilterStore';
 import Pagination from "../main/Pagination";
+import useUserStore from "../../stores/useUserStore";
 function BookGrid() {
 
     const { filters, books, page, loadBooks, sort} = useFilterStore();
+    const { user } =useUserStore();
 
     useEffect(() => {
         loadBooks();
-    }, [filters, page, sort]);
+    }, [filters, page, sort, user]);
 
     const filterBooks = Array.isArray(books) ? books.filter(book => book.title && book.price) : [];
 

@@ -5,7 +5,7 @@ import {fetchUser, loginUser, registerUser, updateUser} from "../apiRoutes/userR
 const useUserStore = create(
     persist(
         (set, get) => ({
-            user: [],
+            user: null,
             error: null,
             loading: false,
             isEditing: false,
@@ -35,7 +35,11 @@ const useUserStore = create(
                     if (response.status === 200) {
                         const { token } = response.data;
                         localStorage.setItem('token', token);
-                        set({ loading: false});
+
+                        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+                        const { username } = decodedToken;
+
+                        set({ user: {username},loading: false });
                     } else {
                         set({ error: 'Login failed. Please check your credentials.', loading: false });
                     }
@@ -46,7 +50,9 @@ const useUserStore = create(
 
             logout: () => {
                 localStorage.removeItem('token');
+                localStorage.removeItem('user-storage');
                 set({
+                    user: null,
                     error: null,
                     loading: false
                 });

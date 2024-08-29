@@ -1,12 +1,5 @@
-import React from 'react';
-import {
-    FaUser,
-    FaShoppingCart,
-    FaHeart,
-    FaSignInAlt,
-    FaUserPlus,
-    FaList
-} from 'react-icons/fa';
+import React, {useEffect, useState} from 'react';
+import { FaUser, FaShoppingCart, FaSignInAlt, FaUserPlus, FaList } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/NavBar.css';
 import logo from '../../assets/logo.jpg';
@@ -15,16 +8,22 @@ import useOrderStore from "../../stores/useOrderStore";
 import useUserStore from "../../stores/useUserStore";
 import CartDetails from "../orders/CartDetails";
 import {Link} from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 
 
 function Navbar() {
     const { sort, setSort } = useFilterStore();
-    const { isAuthenticated, logout } = useUserStore();
-    const {showCart, openCart, closeCart} = useOrderStore();
+    const { isAuthenticated, logout, user } = useUserStore();
+    const {showCart, openCart, closeCart } = useOrderStore();
+    const [role, setRole] = useState(null);
 
-    const userStorage = localStorage.getItem('user-storage');
-    const userData = userStorage ? JSON.parse(userStorage) : null;
-    const username = userData?.state?.user?.username;
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            setRole(decodedToken.role);
+        }
+    }, []);
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
         if (value && value !== 'default') {
@@ -71,17 +70,12 @@ function Navbar() {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/account">
-                                        <FaUser/> {username ? username : "My Account"}
+                                        <FaUser/> {user?.username || "My Account"}
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/myOrders">
-                                        <FaList/> My orders
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/favorites">
-                                        <FaHeart/> Favorite
+                                    <Link className="nav-link" to={role === 'admin' ? "/allOrders" : "/myOrders"}>
+                                        <FaList /> {role === 'admin' ? "All Orders" : "My Orders"}
                                     </Link>
                                 </li>
                                 <li className="nav-item">
@@ -104,11 +98,13 @@ function Navbar() {
                                 </li>
                             </>
                         )}
-                        <li className="nav-item">
-                            <Link className="nav-link" to="#" onClick={openCart}>
-                                <FaShoppingCart/> Cart
-                            </Link>
-                        </li>
+                        {role !== 'admin' && isAuthenticated() && (
+                            <li className="nav-item">
+                                <Link className="nav-link" to="#" onClick={openCart}>
+                                    <FaShoppingCart /> Cart
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

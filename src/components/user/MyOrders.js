@@ -19,6 +19,7 @@ function MyOrders() {
                     <thead>
                     <tr>
                         <th>Order ID</th>
+                        <th>User ID</th>
                         <th>Total Price</th>
                         <th>Date</th>
                         <th>Book ID</th>
@@ -32,6 +33,7 @@ function MyOrders() {
                                 {index === 0 && (
                                     <>
                                         <td rowSpan={order.items.length}>{order.id}</td>
+                                        <td rowSpan={order.items.length}>{order.user_id}</td>
                                         <td rowSpan={order.items.length}>${order.total_price}</td>
                                         <td rowSpan={order.items.length}>{new Date(order.order_date).toLocaleDateString()}</td>
                                     </>

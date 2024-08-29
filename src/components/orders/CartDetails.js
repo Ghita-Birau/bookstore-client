@@ -66,9 +66,11 @@ function CartDetails({onClose}){
             </table>
             <h5>Total Price: ${calculateTotalPrice(cart)}</h5>
             <button className="btn btn-secondary" onClick={onClose}>Exit</button>
-            <button className="btn btn-primary" onClick={handlePlaceOrder}>Place order</button>
+            <button className="btn btn-primary" onClick={handlePlaceOrder} disabled={cart.length === 0}>
+                Place order
+            </button>
         </div>
-    );
+);
 }
 
 export default CartDetails;
