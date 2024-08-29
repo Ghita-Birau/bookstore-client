@@ -10,20 +10,19 @@ import CartDetails from "../orders/CartDetails";
 import {Link} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
-
 function Navbar() {
     const { sort, setSort } = useFilterStore();
     const { isAuthenticated, logout, user } = useUserStore();
     const {showCart, openCart, closeCart } = useOrderStore();
-    const [role, setRole] = useState(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            setRole(decodedToken.role);
-        }
-    }, []);
+    const token = localStorage.getItem('token');
+    let role = null;
+
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        role = decodedToken.role;
+    }
+
     const handleSortChange = (value) => {
         console.log('Selected value:', value);
         if (value && value !== 'default') {
@@ -74,7 +73,7 @@ function Navbar() {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to={role === 'admin' ? "/allOrders" : "/myOrders"}>
+                                    <Link className="nav-link" to="/myOrders">
                                         <FaList /> {role === 'admin' ? "All Orders" : "My Orders"}
                                     </Link>
                                 </li>
@@ -83,6 +82,13 @@ function Navbar() {
                                         <FaSignInAlt/> Logout
                                     </Link>
                                 </li>
+                                {role === 'user' && (
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="#" onClick={openCart}>
+                                            <FaShoppingCart /> Cart
+                                        </Link>
+                                    </li>
+                                )}
                             </>
                         ) : (
                             <>
@@ -97,13 +103,6 @@ function Navbar() {
                                     </Link>
                                 </li>
                             </>
-                        )}
-                        {role !== 'admin' && isAuthenticated() && (
-                            <li className="nav-item">
-                                <Link className="nav-link" to="#" onClick={openCart}>
-                                    <FaShoppingCart /> Cart
-                                </Link>
-                            </li>
                         )}
                     </ul>
                 </div>

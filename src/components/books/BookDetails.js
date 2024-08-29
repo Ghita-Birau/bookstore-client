@@ -5,6 +5,7 @@ import { useNavigate} from "react-router-dom";
 import useOrderStore from '../../stores/useOrderStore';
 import {jwtDecode} from "jwt-decode";
 import UpdateStockModal from "./UpdateStockModal";
+import useUserStore from "../../stores/useUserStore";
 
 function BookDetails() {
     const { id } = useParams();
@@ -19,7 +20,7 @@ function BookDetails() {
     const getBookFromCache = useOrderStore((state) => state.getBookFromCache);
     const setBookInCache = useOrderStore((state) => state.setBookInCache);
     const {bookCache} = useOrderStore();
-
+    const { isAuthenticated } = useUserStore();
 
     const token = localStorage.getItem('token');
     let role = null;
@@ -54,7 +55,7 @@ function BookDetails() {
         if (cachedBook) {
             setBook(cachedBook);
         }
-    }, [getBookFromCache, id]);
+    }, [id]);
 
     const handleAddToCart = () => {
         if (quantity > book.stock) {
@@ -110,35 +111,36 @@ function BookDetails() {
             <p><strong>Published:</strong> {new Date(book.publication_date).toLocaleDateString()}</p>
             <p><strong>Stock: </strong> {book.stock}</p>
             <p>{book.long_description}</p>
-
-            {role !== 'admin' ? (
-                <>
-                    <div className="quantity-selector mb-2">
-                        <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
-                        <input
-                            id={`quantity-${id}`}
-                            type="number"
-                            min="1"
-                            value={quantity}
-                            onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
-                            className="form-control"
-                            style={{width: '70px'}}
-                            disabled={book.stock === 0}
-                        />
+            {isAuthenticated() && (
+                role === 'user' ? (
+                    <>
+                        <div className="quantity-selector mb-2">
+                            <label htmlFor={`quantity-${id}`} className="form-label">Quantity:</label>
+                            <input
+                                id={`quantity-${id}`}
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={(e) => setQuantity(parseInt(e.target.value, 10))}
+                                className="form-control"
+                                style={{width: '70px'}}
+                                disabled={book.stock === 0}
+                            />
+                        </div>
+                        <button className="btn btn-primary" onClick={handleAddToCart} disabled={book.stock === 0}>
+                            {book.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        </button>
+                    </>
+                ) : (
+                    <div className="d-flex">
+                        <button className="btn btn-primary me-2" onClick={handleUpdate}>
+                            Update
+                        </button>
+                        <button className="btn btn-danger" onClick={handleDelete}>
+                            Delete
+                        </button>
                     </div>
-                    <button className="btn btn-primary" onClick={handleAddToCart} disabled={book.stock === 0}>
-                        {book.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                    </button>
-                </>
-            ) : (
-                <div className="d-flex">
-                    <button className="btn btn-primary me-2" onClick={handleUpdate}>
-                        Update
-                    </button>
-                    <button className="btn btn-danger" onClick={handleDelete}>
-                        Delete
-                    </button>
-                </div>
+                )
             )}
 
             <UpdateStockModal

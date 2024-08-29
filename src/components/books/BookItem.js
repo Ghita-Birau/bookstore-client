@@ -11,7 +11,7 @@ import { useNavigate} from "react-router-dom";
 
 
 function BookItem({ book }) {
-    const { id, title, author, publishing_house, gen, price, publication_date, stock, discount, is_favorite, image_url, short_description, long_description } = book;
+    const { id, title, author, publishing_house, gen, price, publication_date, stock, image_url, short_description } = book;
     const [quantity, setQuantity] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const addToCart = useOrderStore((state) => state.addToCart);
@@ -91,9 +91,9 @@ function BookItem({ book }) {
         <>
         <div className="card mb-3 h-100">
             <div className="row g-0 h-100">
-                <div className="col-md-4">
+                <div className="col-md-4 card-img-container">
                     <Link to={`/book/${validatedBook.id}`} state={{ book: validatedBook }}>
-                        <img src={validatedBook.image_url} alt="Book Cover" className="img-fluid rounded-start h-100"/>
+                        <img src={validatedBook.image_url} alt="Book Cover" className="img-fluid rounded-start h-100 card-img"/>
                     </Link>
                 </div>
 

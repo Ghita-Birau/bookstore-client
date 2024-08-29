@@ -32,21 +32,6 @@ export const fetchBook = async (id) => {
     }
 };
 
-export const placeOrder = async (orderData) => {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.post(`${apiURL}/order`, orderData, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error creating order:', error);
-        throw error;
-    }
-};
-
 export const updateBookStock = async (bookId, newStock) => {
     try {
         const token = localStorage.getItem('token');

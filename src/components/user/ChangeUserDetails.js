@@ -27,7 +27,6 @@ function ChangeUserDetails() {
         try {
             await updateUser(formData);
             console.log('User updated successfully, redirecting now...');
-            //navigate('/account');
             handleCancelClick();
             console.log('Redirected');
         } catch (error) {
